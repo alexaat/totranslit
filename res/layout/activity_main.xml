@@ -22,7 +22,7 @@
         <EditText
             android:id="@+id/EditText_dialog_Source"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:layout_weight="1"
             android:ems="10"
             android:inputType="textMultiLine" >
@@ -31,19 +31,69 @@
         </EditText>
 
         <ImageButton
-            android:id="@+id/Image_Button_Paste"
+            android:id="@+id/imageButton_Paste"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@android:drawable/btn_star" />
+            android:src="@drawable/ic_menu_paste" />
 
     </LinearLayout>
 
-    <EditText
-        android:id="@+id/EditText_Result"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textMultiLine" />
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_weight="1" >
+
+        <EditText
+            android:id="@+id/EditText_Result"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:ems="10"
+            android:inputType="textMultiLine"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right">
+
+            <ImageButton
+                android:id="@+id/imageButton_Share"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_menu_share"
+                android:layout_gravity="center_vertical" />
+
+            <ImageButton
+                android:id="@+id/imageButton_Copy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                 android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_menu_copy" />
+
+            <ImageButton
+                android:id="@+id/imageButton_Settings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                 android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_menu_preferences" />
+
+            <ImageButton
+                android:id="@+id/imageButton_Delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                 android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_menu_delete" />
+
+            <ImageButton
+                android:id="@+id/imageButton_Info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@android:drawable/ic_menu_help"
+                android:layout_gravity="center_vertical"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </LinearLayout>
