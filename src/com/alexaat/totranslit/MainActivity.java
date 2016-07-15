@@ -25,6 +25,18 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
+        spinner_language = (Spinner) findViewById(R.id.spinner_language);
+        EditText_dialog_Source = (EditText) findViewById(R.id.EditText_dialog_Source);
+        EditText_Result = (EditText) findViewById(R.id.EditText_Result);
+        imageButton_Paste = (ImageButton) findViewById(R.id.imageButton_Paste);
+        imageButton_Share = (ImageButton) findViewById(R.id.imageButton_Share);
+        imageButton_Copy = (ImageButton) findViewById(R.id.imageButton_Copy);
+        imageButton_Settings = (ImageButton) findViewById(R.id.imageButton_Settings);
+        imageButton_Delete = (ImageButton) findViewById(R.id.imageButton_Delete);
+        imageButton_Info = (ImageButton) findViewById(R.id.imageButton_Info);
+        
+        
     } 
 
      
