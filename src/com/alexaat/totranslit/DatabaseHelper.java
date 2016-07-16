@@ -1,6 +1,8 @@
 package com.alexaat.totranslit;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import android.content.ContentValues;
@@ -103,6 +105,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		 c.close();
 		 return null;
 		 
+	 }
+	 
+	 public List<String> getListOfTables(){
+		 List<String> tables = new ArrayList<String>();
+		 Cursor c = this.getReadableDatabase().rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null);
+			 
+		    if (c.moveToFirst()) {
+		    	do{
+		    	  tables.add (c.getString(c.getColumnIndex("name")));
+		    	}while(c.moveToNext());
+		   
+		    }
+		 		 
+		 return tables;
 	 }
 	 
 }

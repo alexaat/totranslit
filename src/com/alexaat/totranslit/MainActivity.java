@@ -1,12 +1,16 @@
 package com.alexaat.totranslit;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
@@ -44,7 +48,9 @@ public class MainActivity extends Activity {
        
        
         SetInitialTables();
-            
+        SetSpinner();    
+        
+        
     } 
 
     private void SetInitialTables(){
@@ -232,4 +238,36 @@ public class MainActivity extends Activity {
     db.close();
     }
   
+    private void SetSpinner(){
+    	
+    	List<String> tables = new ArrayList<String>();
+    	db = new DatabaseHelper(getApplicationContext());
+    	tables = db.getListOfTables();
+    	db.close();
+    	
+    	
+    	List<String> tablesTemp = new ArrayList<String>();
+    	for(String t:tables){
+    		t = t.toLowerCase(Locale.UK);
+    		if(t.contains("_to_")){
+    			tablesTemp.add(t);
+    		}
+    		
+    	}
+    	tables = tablesTemp;
+    	
+    	
+    	 ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, tables);
+         
+         // Drop down layout style - list view with radio button
+         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+         
+         // attaching data adapter to spinner
+         spinner_language.setAdapter(dataAdapter);
+    	
+    	
+    	
+    	
+    }
+    
 }
