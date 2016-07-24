@@ -42,7 +42,9 @@ public class MainActivity extends  ActionBarActivity {
 	ImageButton imageButton_Info;
 	ListPopupWindow listPopupWindow;
 	ListPopupWindow listPopupWindow2;
-
+	TextView tv_language1;
+	TextView tv_language2;
+	
 	String LANG1 = "com.alexaat.tottanslit.lang1_setting";
 	String LANG2 = "com.alexaat.tottanslit.lang2_setting";
 	
@@ -316,6 +318,9 @@ public class MainActivity extends  ActionBarActivity {
 				listPopupWindow2.show();	
 			}});
         
+        tv_language1 = tv1;
+        tv_language2 = tv2;
+        
         
         mActionBar.setDisplayShowCustomEnabled(true);
         Toolbar parent =(Toolbar) view.getParent();
@@ -363,12 +368,15 @@ public class MainActivity extends  ActionBarActivity {
       
         
         //3. Set SharedPreferences 
-        String lang1 = "";
+        String lang1_def = "";
         for (String s : tablesMap.keySet()) {
-            lang1 = s;
+            lang1_def = s;
             break;
         }
+        
+        
       	 sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+      	 String lang1 =  sharedpreferences.getString(LANG1, lang1_def);
    	     String lang2 =  sharedpreferences.getString(LANG2, tablesMap.get(lang1));
    	
    	     tv1.setText(lang1);
@@ -378,6 +386,20 @@ public class MainActivity extends  ActionBarActivity {
      
     	
    }
-  
+
+
+     
+    
+    @Override
+  	protected void onPause() {
+        	
+   	 sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+   	 SharedPreferences.Editor editor = sharedpreferences.edit();
+   	 editor.putString(LANG1, (String) tv_language1.getText());
+     editor.putString(LANG2, (String) tv_language2.getText());
+     editor.commit();
+     
+    	super.onPause();
+    }
     
 }
