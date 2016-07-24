@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+ <color name="black">#000000</color>
+
+<color name="silver">#C0C0C0</color>
+
+<color name="lime">#00FF00</color>
+
+<color name="platinum">#E5E4E2</color>
+
+<color name="seablue">#C2DFFF</color>
+
+<color name="lightcyan">#E0FFFF</color>
+
+<color name="bronze">#CD7F32</color>
+
+<color name="peach">#FFE5B4</color>
+
+<color name="trans">#00000000</color>
+
+<color name="white">#FFFFFF</color>
+
+<color name="baby_blue_eyes">#A1CAF1</color>
+
+
+    
+    
+<drawable name="pressed_color">#7ec0ee</drawable> <!--custom color for pressed state -->
+<drawable name="normal_color">#00FFFFFF</drawable> <!--transperent color for normal state -->
+
+    
+</resources>

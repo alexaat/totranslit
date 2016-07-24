@@ -7,19 +7,32 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import android.app.Activity;
+
+
+
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.ListPopupWindow;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Spinner;
+import android.widget.TextView;
 
 
-public class MainActivity extends Activity {
 
-	Spinner spinner_language;
-	EditText EditText_dialog_Source;
+
+
+public class MainActivity extends  ActionBarActivity {
+
+	
+	EditText EditText_Source;
 	ImageButton imageButton_Paste;
 	EditText EditText_Result;
 	ImageButton imageButton_Share;
@@ -27,17 +40,25 @@ public class MainActivity extends Activity {
 	ImageButton imageButton_Settings;
 	ImageButton imageButton_Delete;
 	ImageButton imageButton_Info;
+	ListPopupWindow listPopupWindow;
+	ListPopupWindow listPopupWindow2;
+
+	String LANG1 = "com.alexaat.tottanslit.lang1_setting";
+	String LANG2 = "com.alexaat.tottanslit.lang2_setting";
+	
+	
+	SharedPreferences sharedpreferences;
+	public static final String MyPREFERENCES = "com.alexaat.totranslit.languages_settings" ;
 	
 	DatabaseHelper db;
-	
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        spinner_language = (Spinner) findViewById(R.id.spinner_language);
-        EditText_dialog_Source = (EditText) findViewById(R.id.EditText_dialog_Source);
+        
+        EditText_Source = (EditText) findViewById(R.id.EditText_dialog_Source);
         EditText_Result = (EditText) findViewById(R.id.EditText_Result);
         imageButton_Paste = (ImageButton) findViewById(R.id.imageButton_Paste);
         imageButton_Share = (ImageButton) findViewById(R.id.imageButton_Share);
@@ -48,8 +69,10 @@ public class MainActivity extends Activity {
        
        
         SetInitialTables();
-        SetSpinner();    
-        
+       
+        SetPopMenu();
+       
+       
         
     } 
 
@@ -238,13 +261,14 @@ public class MainActivity extends Activity {
     db.close();
     }
   
-    private void SetSpinner(){
+    private void SetPopMenu(){
+	   
     	
+    	// 1. Get tables
     	List<String> tables = new ArrayList<String>();
     	db = new DatabaseHelper(getApplicationContext());
     	tables = db.getListOfTables();
     	db.close();
-    	
     	
     	List<String> tablesTemp = new ArrayList<String>();
     	for(String t:tables){
@@ -256,18 +280,104 @@ public class MainActivity extends Activity {
     	}
     	tables = tablesTemp;
     	
-    	
-    	 ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, tables);
-         
-         // Drop down layout style - list view with radio button
-         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-         
-         // attaching data adapter to spinner
-         spinner_language.setAdapter(dataAdapter);
-    	
+    	final Map<String,String> tablesMap = new HashMap<String,String>();
+    	for(String t:tables){
+    		
+    		String[] tables_parts = t.split("_to_");
+    		tablesMap.put(tables_parts[0], tables_parts[1]);
+    		    		
+    	}
     	
     	
     	
-    }
+        // 2. Set PopUp menus
+        android.support.v7.app.ActionBar mActionBar =this.getSupportActionBar();
+        mActionBar.setDisplayShowHomeEnabled(false);
+        mActionBar.setDisplayShowTitleEnabled(false);
+            
+        mActionBar.setCustomView(R.layout.abs_layout);
+        View view = this.getSupportActionBar().getCustomView();
+            
+        final TextView tv1 = (TextView) view.findViewById(R.id.lang1);
+        tv1.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				listPopupWindow.show();				
+							
+			}});
+        
+        
+        final TextView tv2 = (TextView) view.findViewById(R.id.lang2);
+        tv2.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				listPopupWindow2.show();	
+			}});
+        
+        
+        mActionBar.setDisplayShowCustomEnabled(true);
+        Toolbar parent =(Toolbar) view.getParent();
+        parent.setContentInsetsAbsolute(0,0);
+        
+        List<String> keySet = new ArrayList<String>(tablesMap.keySet());
+       
+        
+        
+        listPopupWindow = new ListPopupWindow(this);
+        listPopupWindow.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, keySet));
+        listPopupWindow.setAnchorView(tv1);
+        listPopupWindow.setModal(true);
+        
+        listPopupWindow.setOnItemClickListener(new OnItemClickListener(){
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				
+				String value =  (String) parent.getItemAtPosition(position);
+				tv1.setText(value);
+				listPopupWindow.dismiss();
+				
+				tv2.setText(tablesMap.get(value));
+			}});
+         	
+    	
+        
+        listPopupWindow2 = new ListPopupWindow(this);
+        listPopupWindow2.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, keySet));
+        listPopupWindow2.setAnchorView(tv2);
+        listPopupWindow2.setModal(true);
+        
+        listPopupWindow2.setOnItemClickListener(new OnItemClickListener(){
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				String value =  (String) parent.getItemAtPosition(position);
+				tv2.setText(value);
+				listPopupWindow2.dismiss();
+				tv1.setText(tablesMap.get(value));
+			}});
+      
+        
+        //3. Set SharedPreferences 
+        String lang1 = "";
+        for (String s : tablesMap.keySet()) {
+            lang1 = s;
+            break;
+        }
+      	 sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+   	     String lang2 =  sharedpreferences.getString(LANG2, tablesMap.get(lang1));
+   	
+   	     tv1.setText(lang1);
+   	     tv2.setText(lang2);
+   	 
+        
+     
+    	
+   }
+  
     
 }
