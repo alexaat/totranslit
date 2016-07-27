@@ -381,13 +381,35 @@ public class MainActivity extends  ActionBarActivity {
         
         List<OverflowHolder> list = new  ArrayList<OverflowHolder>();
         OverflowHolder item = new OverflowHolder();
-        item.setId(R.drawable.ic_menu_paste);
-        item.setText("Paste");
-        list.add(item);
-        item = new OverflowHolder();
         item.setId(R.drawable.ic_menu_copy);
         item.setText("Copy");
         list.add(item);
+        
+        item = new OverflowHolder();
+        item.setId(R.drawable.ic_menu_paste);
+        item.setText("Paste");
+        list.add(item);
+        
+        item = new OverflowHolder();
+        item.setId(R.drawable.ic_menu_delete);
+        item.setText("Delete");
+        list.add(item);
+        
+        item = new OverflowHolder();
+        item.setId(R.drawable.ic_menu_share);
+        item.setText("Share");
+        list.add(item);
+        
+        item = new OverflowHolder();
+        item.setId(R.drawable.ic_menu_preferences);
+        item.setText("Preferences");
+        list.add(item);
+        
+        item = new OverflowHolder();
+        item.setId(R.drawable.ic_menu_help);
+        item.setText("Help");
+        list.add(item);
+        
         
         OverflowMenuAdapter  overflowMenuAdapter = new OverflowMenuAdapter(getApplicationContext(),R.layout.overflow_item_layout,list);
         listPopupWindowOverflow.setAdapter(overflowMenuAdapter);
