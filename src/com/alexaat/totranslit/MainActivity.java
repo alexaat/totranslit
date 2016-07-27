@@ -6,10 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-
-
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -42,6 +38,7 @@ public class MainActivity extends  ActionBarActivity {
 	ImageButton imageButton_Info;
 	ListPopupWindow listPopupWindow;
 	ListPopupWindow listPopupWindow2;
+	ListPopupWindow listPopupWindowOverflow;
 	TextView tv_language1;
 	TextView tv_language2;
 	
@@ -296,7 +293,9 @@ public class MainActivity extends  ActionBarActivity {
         android.support.v7.app.ActionBar mActionBar =this.getSupportActionBar();
         mActionBar.setDisplayShowHomeEnabled(false);
         mActionBar.setDisplayShowTitleEnabled(false);
-            
+          
+        
+        
         mActionBar.setCustomView(R.layout.abs_layout);
         View view = this.getSupportActionBar().getCustomView();
             
@@ -367,6 +366,46 @@ public class MainActivity extends  ActionBarActivity {
 			}});
       
         
+        
+        //2.1 SetPopupMenu for overflow
+        final ImageButton imageButtonMenu = (ImageButton) view.findViewById(R.id.imageButtonMenu);
+        
+        imageButtonMenu.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				listPopupWindowOverflow.show();				
+			}});
+        
+        listPopupWindowOverflow = new ListPopupWindow(this);
+        
+        List<OverflowHolder> list = new  ArrayList<OverflowHolder>();
+        OverflowHolder item = new OverflowHolder();
+        item.setId(R.drawable.ic_menu_paste);
+        item.setText("Paste");
+        list.add(item);
+        item = new OverflowHolder();
+        item.setId(R.drawable.ic_menu_copy);
+        item.setText("Copy");
+        list.add(item);
+        
+        OverflowMenuAdapter  overflowMenuAdapter = new OverflowMenuAdapter(getApplicationContext(),R.layout.overflow_item_layout,list);
+        listPopupWindowOverflow.setAdapter(overflowMenuAdapter);
+        listPopupWindowOverflow.setAnchorView(imageButtonMenu);
+        listPopupWindowOverflow.setModal(true);
+        listPopupWindowOverflow.setWidth(300);
+        
+        listPopupWindowOverflow.setOnItemClickListener(new OnItemClickListener(){
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				listPopupWindowOverflow.dismiss();
+				
+			}});
+        
+        
+        
         //3. Set SharedPreferences 
         String lang1_def = "";
         for (String s : tablesMap.keySet()) {
@@ -382,13 +421,26 @@ public class MainActivity extends  ActionBarActivity {
    	     tv1.setText(lang1);
    	     tv2.setText(lang2);
    	 
-        
-     
-    	
+   	     
+   	     //4.Set Backgrounds and swap listener
+   	     imageButtonMenu.setBackgroundResource(R.drawable.lable_bg);   
+   	     ImageButton imageButtonSwap = (ImageButton) view.findViewById(R.id.imageButtonSwap);
+   	     imageButtonSwap.setBackgroundResource(R.drawable.lable_bg);
+   	     imageButtonSwap.setOnClickListener(new OnClickListener(){
+
+   	    	 @Override
+   	    	 public void onClick(View v) {
+   	    				String lang1 = (String) tv1.getText();
+   	    				String lang2 = (String) tv2.getText();
+   	    				tv1.setText(lang2);
+   	    				tv2.setText(lang1);
+   	    	 }});
+   	     
+   	     
+   	     
+   	     
+   	     
    }
-
-
-     
     
     @Override
   	protected void onPause() {

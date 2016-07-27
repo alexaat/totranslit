@@ -1649,24 +1649,25 @@ containing a value of this type.
         public static final int ic_menu_copy=0x7f020035;
         public static final int ic_menu_delete=0x7f020036;
         public static final int ic_menu_help=0x7f020037;
-        public static final int ic_menu_paste=0x7f020038;
-        public static final int ic_menu_preferences=0x7f020039;
-        public static final int ic_menu_share=0x7f02003a;
-        public static final int ic_menu_swap=0x7f02003b;
-        public static final int ic_swap_gray=0x7f02003c;
-        public static final int lable_bg=0x7f02003d;
+        public static final int ic_menu_manage=0x7f020038;
+        public static final int ic_menu_moreoverflow_normal_holo_light=0x7f020039;
+        public static final int ic_menu_paste=0x7f02003a;
+        public static final int ic_menu_preferences=0x7f02003b;
+        public static final int ic_menu_share=0x7f02003c;
+        public static final int ic_menu_swap=0x7f02003d;
+        public static final int ic_swap_gray=0x7f02003e;
+        public static final int lable_bg=0x7f02003f;
         /** custom color for pressed state 
          */
-        public static final int normal_color=0x7f020042;
-        public static final int perm_group_shortrange_network=0x7f02003e;
-        public static final int perm_group_shortrange_networktr=0x7f02003f;
-        public static final int pressed_color=0x7f020041;
-        public static final int rectangle=0x7f020040;
+        public static final int normal_color=0x7f020043;
+        public static final int perm_group_network=0x7f020040;
+        public static final int pressed_color=0x7f020042;
+        public static final int rectangle=0x7f020041;
     }
     public static final class id {
-        public static final int EditText_Result=0x7f050047;
-        public static final int EditText_dialog_Source=0x7f050045;
-        public static final int LinearLayout1=0x7f050044;
+        public static final int EditText_Result=0x7f050048;
+        public static final int EditText_dialog_Source=0x7f050046;
+        public static final int LinearLayout1=0x7f050045;
         public static final int action_bar=0x7f050033;
         public static final int action_bar_activity_content=0x7f05001a;
         public static final int action_bar_container=0x7f050032;
@@ -1680,7 +1681,7 @@ containing a value of this type.
         public static final int action_mode_bar=0x7f050030;
         public static final int action_mode_bar_stub=0x7f05002f;
         public static final int action_mode_close_button=0x7f050022;
-        public static final int action_settings=0x7f05004d;
+        public static final int action_settings=0x7f050050;
         public static final int activity_chooser_view_content=0x7f050023;
         public static final int always=0x7f05000d;
         public static final int beginning=0x7f050012;
@@ -1701,13 +1702,15 @@ containing a value of this type.
         public static final int icon=0x7f050028;
         public static final int ifRoom=0x7f05000c;
         public static final int image=0x7f050025;
-        public static final int imageButton11=0x7f050042;
-        public static final int imageButton_Copy=0x7f050049;
-        public static final int imageButton_Delete=0x7f05004b;
-        public static final int imageButton_Info=0x7f05004c;
-        public static final int imageButton_Paste=0x7f050046;
-        public static final int imageButton_Settings=0x7f05004a;
-        public static final int imageButton_Share=0x7f050048;
+        public static final int imageButtonMenu=0x7f050044;
+        public static final int imageButtonSwap=0x7f050042;
+        public static final int imageButton_Copy=0x7f05004a;
+        public static final int imageButton_Delete=0x7f05004c;
+        public static final int imageButton_Info=0x7f05004d;
+        public static final int imageButton_Paste=0x7f050047;
+        public static final int imageButton_Settings=0x7f05004b;
+        public static final int imageButton_Share=0x7f050049;
+        public static final int imageViewOverflowItem=0x7f05004e;
         public static final int lang1=0x7f050041;
         public static final int lang2=0x7f050043;
         public static final int listMode=0x7f050002;
@@ -1736,6 +1739,7 @@ containing a value of this type.
         public static final int split_action_bar=0x7f05001b;
         public static final int submit_area=0x7f05003e;
         public static final int tabMode=0x7f050003;
+        public static final int textViewOverflowItem=0x7f05004f;
         public static final int title=0x7f050029;
         public static final int top=0x7f050015;
         public static final int up=0x7f050018;
@@ -1794,7 +1798,8 @@ containing a value of this type.
         public static final int abc_simple_dropdown_hint=0x7f030016;
         public static final int abs_layout=0x7f030017;
         public static final int activity_main=0x7f030018;
-        public static final int support_simple_spinner_dropdown_item=0x7f030019;
+        public static final int overflow_item_layout=0x7f030019;
+        public static final int support_simple_spinner_dropdown_item=0x7f03001a;
     }
     public static final class menu {
         public static final int main=0x7f0c0000;
