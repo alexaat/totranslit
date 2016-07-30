@@ -21,6 +21,7 @@ public class OverflowMenuAdapter extends ArrayAdapter<OverflowHolder>{
 	  int resource;
 	  List<OverflowHolder> objects;
 	  
+	  
 	public OverflowMenuAdapter(Context context, int resource, List<OverflowHolder> objects) {
 		super(context, resource, objects);
 		this.context = context;
@@ -29,13 +30,13 @@ public class OverflowMenuAdapter extends ArrayAdapter<OverflowHolder>{
 		
 	}
 
-	  
+	 
+
 	    @Override
 	    public int getCount() {
 	   
 	        return objects.size();
 	    }
-
 	 
 
 	    @Override

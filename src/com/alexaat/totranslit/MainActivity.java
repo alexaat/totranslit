@@ -12,8 +12,14 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.View;
+import android.view.View.MeasureSpec;
 import android.view.View.OnClickListener;
+import android.view.View.OnLayoutChangeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -31,11 +37,11 @@ public class MainActivity extends  ActionBarActivity {
 	EditText EditText_Source;
 	ImageButton imageButton_Paste;
 	EditText EditText_Result;
-	ImageButton imageButton_Share;
-	ImageButton imageButton_Copy;
-	ImageButton imageButton_Settings;
-	ImageButton imageButton_Delete;
-	ImageButton imageButton_Info;
+	//ImageButton imageButton_Share;
+	//ImageButton imageButton_Copy;
+	//ImageButton imageButton_Settings;
+	//ImageButton imageButton_Delete;
+	//ImageButton imageButton_Info;
 	ListPopupWindow listPopupWindow;
 	ListPopupWindow listPopupWindow2;
 	ListPopupWindow listPopupWindowOverflow;
@@ -59,12 +65,12 @@ public class MainActivity extends  ActionBarActivity {
         
         EditText_Source = (EditText) findViewById(R.id.EditText_dialog_Source);
         EditText_Result = (EditText) findViewById(R.id.EditText_Result);
-        imageButton_Paste = (ImageButton) findViewById(R.id.imageButton_Paste);
-        imageButton_Share = (ImageButton) findViewById(R.id.imageButton_Share);
-        imageButton_Copy = (ImageButton) findViewById(R.id.imageButton_Copy);
-        imageButton_Settings = (ImageButton) findViewById(R.id.imageButton_Settings);
-        imageButton_Delete = (ImageButton) findViewById(R.id.imageButton_Delete);
-        imageButton_Info = (ImageButton) findViewById(R.id.imageButton_Info);
+        //imageButton_Paste = (ImageButton) findViewById(R.id.imageButton_Paste);
+        //imageButton_Share = (ImageButton) findViewById(R.id.imageButton_Share);
+        //imageButton_Copy = (ImageButton) findViewById(R.id.imageButton_Copy);
+        //imageButton_Settings = (ImageButton) findViewById(R.id.imageButton_Settings);
+        //imageButton_Delete = (ImageButton) findViewById(R.id.imageButton_Delete);
+        //imageButton_Info = (ImageButton) findViewById(R.id.imageButton_Info);
        
        
         SetInitialTables();
@@ -415,7 +421,60 @@ public class MainActivity extends  ActionBarActivity {
         listPopupWindowOverflow.setAdapter(overflowMenuAdapter);
         listPopupWindowOverflow.setAnchorView(imageButtonMenu);
         listPopupWindowOverflow.setModal(true);
-        listPopupWindowOverflow.setWidth(300);
+        //listPopupWindowOverflow.setWidth(280);
+
+       /* 
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        Log.d("TAG", String.valueOf(metrics.densityDpi));
+        Log.d("TAG", String.valueOf(metrics.scaledDensity));
+        Log.d("TAG", String.valueOf(metrics.density));
+        Log.d("TAG", String.valueOf(metrics.widthPixels));
+        Log.d("TAG", String.valueOf(metrics.xdpi));
+        */
+        
+        // 2.2 Set width of menu
+        int menuWidth = 0;
+        View menuView;
+        View menuViewIcon;
+        int menuIconWidth = 0;
+        int menuCount = overflowMenuAdapter.getCount();
+        float scaledDensity;
+        int menuTextWidth = 0;
+        View menuViewText;
+               
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        scaledDensity = metrics.scaledDensity;
+        
+        for(int i = 0; i<menuCount; i++){
+        	menuView = overflowMenuAdapter.getView(i, null, null);
+        	menuView.measure(0,0);
+        	
+        	menuViewIcon = menuView.findViewById(R.id.imageViewOverflowItem);
+        	menuIconWidth = menuViewIcon.getMeasuredWidth();
+        	
+        	
+        	
+        	menuViewText = menuView.findViewById(R.id.textViewOverflowItem);
+        	menuTextWidth = menuViewText.getMeasuredWidth();
+        	        	
+        	int widthTemp  = (int) (menuIconWidth*scaledDensity + menuTextWidth);
+                	if(widthTemp>menuWidth){
+        	   
+        		menuWidth = widthTemp;
+        	}
+        }
+        if(menuWidth <= 0){
+        	menuWidth = 300;
+        }
+        else{
+        	menuWidth = (int) (menuWidth + 4/scaledDensity) ;
+        }
+        listPopupWindowOverflow.setWidth(menuWidth);
+             
+ /////////////////////////////////           
+    	
         
         listPopupWindowOverflow.setOnItemClickListener(new OnItemClickListener(){
 
@@ -476,4 +535,10 @@ public class MainActivity extends  ActionBarActivity {
     	super.onPause();
     }
     
+    private View GetOverflowView(){
+    	View v = new View(this);
+    	
+    	
+    	return v;
+    }
 }
