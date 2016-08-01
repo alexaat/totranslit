@@ -426,13 +426,7 @@ public class MainActivity extends  ActionBarActivity {
         listPopupWindowOverflow.setAdapter(overflowMenuAdapter);
         listPopupWindowOverflow.setAnchorView(imageButtonMenu);
         listPopupWindowOverflow.setModal(true);
-       //listPopupWindowOverflow.setHorizontalOffset(-300);
-        //listPopupWindowOverflow.setContentWidth(229);
-       
-        //listPopupWindowOverflow.setContentWidth(150);
-        //listPopupWindowOverflow.setWidth(LayoutParams.WRAP_CONTENT);
-        
-       
+     
         int maxWidth = 100;
         for(int i = 0; i<overflowMenuAdapter.getCount(); i++){
         	 View menuView = overflowMenuAdapter.getView(i, null, null);
@@ -441,11 +435,10 @@ public class MainActivity extends  ActionBarActivity {
         	if(measureWidth>maxWidth){
         		maxWidth = measureWidth;
         	}
-        	Log.d("TAG", String.valueOf(i) + " mesured: " +  String.valueOf(menuView.getMeasuredWidth()));
         }
-      
-        Log.d("TAG","max mesured: " +  String.valueOf(maxWidth));
-        listPopupWindowOverflow.setContentWidth(maxWidth+8);
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        listPopupWindowOverflow.setContentWidth((int)(maxWidth+4*metrics.scaledDensity));
         
 
        /*
