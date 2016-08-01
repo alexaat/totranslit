@@ -427,6 +427,7 @@ public class MainActivity extends  ActionBarActivity {
         listPopupWindowOverflow.setAnchorView(imageButtonMenu);
         listPopupWindowOverflow.setModal(true);
      
+        //2.2 Set overflow menu width //////////////////////////////////////////////////////
         int maxWidth = 100;
         for(int i = 0; i<overflowMenuAdapter.getCount(); i++){
         	 View menuView = overflowMenuAdapter.getView(i, null, null);
@@ -439,73 +440,14 @@ public class MainActivity extends  ActionBarActivity {
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         listPopupWindowOverflow.setContentWidth((int)(maxWidth+4*metrics.scaledDensity));
-        
-
-       /*
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        Log.d("TAG", String.valueOf(metrics.densityDpi));
-        Log.d("TAG", String.valueOf(metrics.scaledDensity));
-        Log.d("TAG", String.valueOf(metrics.density));
-        Log.d("TAG", String.valueOf(metrics.widthPixels));
-        Log.d("TAG", String.valueOf(metrics.xdpi));
-        
-        
-        // 2.2 Set width of menu
-        int menuWidth = 0;
-        View menuView;
-        View menuViewIcon;
-        int menuIconWidth = 0;
-        int menuCount = overflowMenuAdapter.getCount();
-        float scaledDensity;
-        int menuTextWidth = 0;
-        View menuViewText;
-               
-         metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        scaledDensity = metrics.scaledDensity;
-        
-        for(int i = 0; i<menuCount; i++){
-        	menuView = overflowMenuAdapter.getView(i, null, null);
-        	menuView.measure(0,0);
-        	
-        	menuViewIcon = menuView.findViewById(R.id.imageViewOverflowItem);
-        	menuIconWidth = menuViewIcon.getMeasuredWidth();
-        	
-        	
-        	
-        	menuViewText = menuView.findViewById(R.id.textViewOverflowItem);
-        	menuTextWidth = menuViewText.getMeasuredWidth();
-        	        	
-        	int widthTemp  = (int) (menuIconWidth*scaledDensity + menuTextWidth);
-                	if(widthTemp>menuWidth){
-        	   
-        		menuWidth = widthTemp;
-        	}
-        }
-        if(menuWidth <= 0){
-        	menuWidth = 300;
-        }
-        else{
-        	menuWidth = (int) (menuWidth + 4/scaledDensity) ;
-        }
-        listPopupWindowOverflow.setWidth(menuWidth);
-             
-        listPopupWindowOverflow.setWidth(280);
-        */
- /////////////////////////////////           
-    	
-       
-        
+        /////////////////////////////////////////////////////////////////////////////////////
         
         listPopupWindowOverflow.setOnItemClickListener(new OnItemClickListener(){
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				
-				Log.d("TAG", String.valueOf(position) + " = " +String.valueOf(view.getWidth()));
-				
+											
 				listPopupWindowOverflow.dismiss();
 				
 			}});
