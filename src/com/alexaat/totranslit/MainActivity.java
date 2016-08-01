@@ -8,8 +8,12 @@ import java.util.Locale;
 import java.util.Map;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.LinearLayoutCompat.LayoutParams;
 import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
@@ -25,6 +29,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
@@ -299,8 +304,8 @@ public class MainActivity extends  ActionBarActivity {
         android.support.v7.app.ActionBar mActionBar =this.getSupportActionBar();
         mActionBar.setDisplayShowHomeEnabled(false);
         mActionBar.setDisplayShowTitleEnabled(false);
-          
-        
+               
+        mActionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#E5E4E2")));
         
         mActionBar.setCustomView(R.layout.abs_layout);
         View view = this.getSupportActionBar().getCustomView();
@@ -421,9 +426,29 @@ public class MainActivity extends  ActionBarActivity {
         listPopupWindowOverflow.setAdapter(overflowMenuAdapter);
         listPopupWindowOverflow.setAnchorView(imageButtonMenu);
         listPopupWindowOverflow.setModal(true);
-        //listPopupWindowOverflow.setWidth(280);
+       //listPopupWindowOverflow.setHorizontalOffset(-300);
+        //listPopupWindowOverflow.setContentWidth(229);
+       
+        //listPopupWindowOverflow.setContentWidth(150);
+        //listPopupWindowOverflow.setWidth(LayoutParams.WRAP_CONTENT);
+        
+       
+        int maxWidth = 100;
+        for(int i = 0; i<overflowMenuAdapter.getCount(); i++){
+        	 View menuView = overflowMenuAdapter.getView(i, null, null);
+        	menuView.measure(0,0);
+        	int measureWidth = menuView.getMeasuredWidth();
+        	if(measureWidth>maxWidth){
+        		maxWidth = measureWidth;
+        	}
+        	Log.d("TAG", String.valueOf(i) + " mesured: " +  String.valueOf(menuView.getMeasuredWidth()));
+        }
+      
+        Log.d("TAG","max mesured: " +  String.valueOf(maxWidth));
+        listPopupWindowOverflow.setContentWidth(maxWidth+8);
+        
 
-       /* 
+       /*
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         Log.d("TAG", String.valueOf(metrics.densityDpi));
@@ -431,7 +456,7 @@ public class MainActivity extends  ActionBarActivity {
         Log.d("TAG", String.valueOf(metrics.density));
         Log.d("TAG", String.valueOf(metrics.widthPixels));
         Log.d("TAG", String.valueOf(metrics.xdpi));
-        */
+        
         
         // 2.2 Set width of menu
         int menuWidth = 0;
@@ -443,7 +468,7 @@ public class MainActivity extends  ActionBarActivity {
         int menuTextWidth = 0;
         View menuViewText;
                
-        DisplayMetrics metrics = new DisplayMetrics();
+         metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         scaledDensity = metrics.scaledDensity;
         
@@ -473,14 +498,21 @@ public class MainActivity extends  ActionBarActivity {
         }
         listPopupWindowOverflow.setWidth(menuWidth);
              
+        listPopupWindowOverflow.setWidth(280);
+        */
  /////////////////////////////////           
     	
+       
+        
         
         listPopupWindowOverflow.setOnItemClickListener(new OnItemClickListener(){
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
+				
+				Log.d("TAG", String.valueOf(position) + " = " +String.valueOf(view.getWidth()));
+				
 				listPopupWindowOverflow.dismiss();
 				
 			}});
@@ -535,10 +567,5 @@ public class MainActivity extends  ActionBarActivity {
     	super.onPause();
     }
     
-    private View GetOverflowView(){
-    	View v = new View(this);
-    	
-    	
-    	return v;
-    }
+   
 }

@@ -65,6 +65,7 @@ public class OverflowMenuAdapter extends ArrayAdapter<OverflowHolder>{
 			TextView textViewOverflowItem = (TextView) convertView.findViewById(R.id.textViewOverflowItem);
 			ImageView imageViewOverflowItem = (ImageView) convertView.findViewById(R.id.imageViewOverflowItem);
 			
+		
 			textViewOverflowItem.setText(getItem(position).getText());			
 			imageViewOverflowItem.setImageResource(getItem(position).getId());
 			
@@ -73,27 +74,7 @@ public class OverflowMenuAdapter extends ArrayAdapter<OverflowHolder>{
 
 		return convertView;
 		
-		  /*
-	    @Override
-	    public View getView(final int position, View convertView, ViewGroup parent) {
-	        // TODO Auto-generated method stub
-	        Holder holder=new Holder();
-	        View rowView;       
-	             rowView = inflater.inflate(R.layout.overflow_item_layout, null);
-	             holder.textViewOverflowItem=(TextView) rowView.findViewById(R.id.textViewOverflowItem);
-	             holder.imageViewOverflowItem=(ImageView) rowView.findViewById(R.id.imageViewOverflowItem);       
-	         holder.textViewOverflowItem.setText(result[position]);
-	         holder.imageViewOverflowItem.setImageResource(imageId[position]);         
-	         rowView.setOnClickListener(new OnClickListener() {            
-	            @Override
-	            public void onClick(View v) {
-	                // TODO Auto-generated method stub
-	                Toast.makeText(context, "You Clicked "+result[position], Toast.LENGTH_LONG).show();
-	            }
-	        });   
-	        return rowView;
-	    }
-	*/
+		
 		
 		
 		}

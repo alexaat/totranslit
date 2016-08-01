@@ -1682,7 +1682,7 @@ containing a value of this type.
         public static final int action_mode_bar=0x7f050030;
         public static final int action_mode_bar_stub=0x7f05002f;
         public static final int action_mode_close_button=0x7f050022;
-        public static final int action_settings=0x7f05004a;
+        public static final int action_settings=0x7f05004b;
         public static final int activity_chooser_view_content=0x7f050023;
         public static final int always=0x7f05000d;
         public static final int beginning=0x7f050012;
@@ -1705,9 +1705,10 @@ containing a value of this type.
         public static final int image=0x7f050025;
         public static final int imageButtonMenu=0x7f050044;
         public static final int imageButtonSwap=0x7f050042;
-        public static final int imageViewOverflowItem=0x7f050048;
+        public static final int imageViewOverflowItem=0x7f050049;
         public static final int lang1=0x7f050041;
         public static final int lang2=0x7f050043;
+        public static final int layoutOverflow=0x7f050048;
         public static final int listMode=0x7f050002;
         public static final int list_item=0x7f050027;
         public static final int middle=0x7f050013;
@@ -1734,7 +1735,7 @@ containing a value of this type.
         public static final int split_action_bar=0x7f05001b;
         public static final int submit_area=0x7f05003e;
         public static final int tabMode=0x7f050003;
-        public static final int textViewOverflowItem=0x7f050049;
+        public static final int textViewOverflowItem=0x7f05004a;
         public static final int title=0x7f050029;
         public static final int top=0x7f050015;
         public static final int up=0x7f050018;
