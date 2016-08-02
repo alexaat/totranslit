@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -71,7 +72,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		 }
 	 }
 	 
-	 public Map<String,String> Get(String table){
+	 public TreeMap<String,String> Get(String table){
 		 Map<String,String> values = new HashMap<String,String>();
 		 
 		 Cursor c = this.getReadableDatabase().query(table, null, null, null, null, null, null);
@@ -86,7 +87,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		 }		 
 		 
 		 c.close();
-		 return values;
+		 return new TreeMap<String,String>(values);
 	 }
 	 
 	 public String GetValue(String table, String key){

@@ -2,10 +2,14 @@ package com.alexaat.totranslit;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TreeMap;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -16,6 +20,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutCompat.LayoutParams;
 import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -40,18 +46,13 @@ public class MainActivity extends  ActionBarActivity {
 
 	
 	EditText EditText_Source;
-	ImageButton imageButton_Paste;
 	EditText EditText_Result;
-	//ImageButton imageButton_Share;
-	//ImageButton imageButton_Copy;
-	//ImageButton imageButton_Settings;
-	//ImageButton imageButton_Delete;
-	//ImageButton imageButton_Info;
 	ListPopupWindow listPopupWindow;
 	ListPopupWindow listPopupWindow2;
 	ListPopupWindow listPopupWindowOverflow;
 	TextView tv_language1;
 	TextView tv_language2;
+
 	
 	String LANG1 = "com.alexaat.tottanslit.lang1_setting";
 	String LANG2 = "com.alexaat.tottanslit.lang2_setting";
@@ -62,27 +63,31 @@ public class MainActivity extends  ActionBarActivity {
 	
 	DatabaseHelper db;
 	
+	Map<String,String> Language;
+	ArrayList<Boolean> mark;
+	
+	
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
+       
         
         EditText_Source = (EditText) findViewById(R.id.EditText_dialog_Source);
         EditText_Result = (EditText) findViewById(R.id.EditText_Result);
-        //imageButton_Paste = (ImageButton) findViewById(R.id.imageButton_Paste);
-        //imageButton_Share = (ImageButton) findViewById(R.id.imageButton_Share);
-        //imageButton_Copy = (ImageButton) findViewById(R.id.imageButton_Copy);
-        //imageButton_Settings = (ImageButton) findViewById(R.id.imageButton_Settings);
-        //imageButton_Delete = (ImageButton) findViewById(R.id.imageButton_Delete);
-        //imageButton_Info = (ImageButton) findViewById(R.id.imageButton_Info);
-       
-       
+               
         SetInitialTables();
        
         SetPopMenu();
        
+        SetListeners();
+        
+      
        
+       
+        
         
     } 
 
@@ -331,6 +336,8 @@ public class MainActivity extends  ActionBarActivity {
         tv_language1 = tv1;
         tv_language2 = tv2;
         
+       
+        
         
         mActionBar.setDisplayShowCustomEnabled(true);
         Toolbar parent =(Toolbar) view.getParent();
@@ -482,6 +489,9 @@ public class MainActivity extends  ActionBarActivity {
    	    				String lang2 = (String) tv2.getText();
    	    				tv1.setText(lang2);
    	    				tv2.setText(lang1);
+   	    				Language = SetLanguageMap();
+   	    				EditText_Result.setText(Translit(EditText_Source.getText().toString(),Language));
+   	    				   	    				
    	    	 }});
    	     
    	     
@@ -502,5 +512,125 @@ public class MainActivity extends  ActionBarActivity {
     	super.onPause();
     }
     
-   
+    private void SetListeners(){
+    	   	
+    	
+    	EditText_Source.addTextChangedListener(new TextWatcher(){
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				EditText_Result.setText(Translit(s.toString(), Language));
+				
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				
+			}});
+    	   	
+    	
+    	
+    }
+    
+    private Map<String,String> SetLanguageMap(){
+    	  
+    	Map<String,String> LanguageMap = new HashMap<String,String>();
+    	db = new DatabaseHelper(getApplicationContext());
+    	String source = tv_language1.getText().toString();
+    	String target = tv_language2.getText().toString();
+    	String table = 	source + "_to_" +	target;
+    	LanguageMap = db.Get(table);
+    	db.close();
+    	
+    	// sort language map
+    	LanguageMap =  SortMap(LanguageMap);
+    	   	
+    	return LanguageMap;
+    }
+    
+    private String Translit(String source, Map<String,String> Language){
+    	
+    	
+    	if(Language == null){
+    		Language = SetLanguageMap();
+    	}
+    	if(Language.size()==0){
+    		Language = SetLanguageMap();
+    	}
+    	
+    	
+    	 for (Map.Entry<String,String> entry : Language.entrySet()) {
+    	        String value = entry.getValue();
+    	        String key = entry.getKey();
+    	        source = source.replace(key, value);
+    	        
+    	        
+    	   }
+    	
+    	
+    	
+    	//result = source.replace("bo", "б0");
+    	
+    	
+    	
+    	
+    	
+    	return source;
+    }
+
+    private Map<String,String> SortMap(Map<String,String> map){
+    	
+    	if(map == null){
+    		return null;
+    	}
+  	
+    	
+    	Map<String, String> treeMap = new TreeMap<String, String>(
+    		    new Comparator<String>() {
+    		        @Override
+    		        public int compare(String s1, String s2) {
+    		            if (s1.length() > s2.length()) {
+    		                return -1;
+    		            } else if (s1.length() < s2.length()) {
+    		                return 1;
+    		            } else {
+    		                return s1.compareTo(s2);
+    		            }
+    		        }
+    		});
+    	
+    	treeMap.putAll(map);
+    	
+
+    	
+    	return treeMap;
+    }
+    
+    
+    private void PrintMap(Map<String,String> map){
+    	
+    	Log.d("TAG", "Printing map");
+    	for (Map.Entry<String, String> entry : map.entrySet()) {
+    	    String key = entry.getKey();
+    	    Object value = entry.getValue();
+    	    Log.d("TAG", "key = " + key + "; value = " + value);
+    	}
+    }
+    
+	    
+	@Override
+	protected void onResume(){
+		
+		Language = SetLanguageMap();
+		super.onResume();
+	}
 }
