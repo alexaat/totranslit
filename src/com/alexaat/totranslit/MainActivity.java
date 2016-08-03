@@ -2,41 +2,35 @@ package com.alexaat.totranslit;
 
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
-
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.LinearLayoutCompat.LayoutParams;
 import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.Toolbar;
+import android.text.ClipboardManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
-import android.view.Gravity;
 import android.view.View;
-import android.view.View.MeasureSpec;
 import android.view.View.OnClickListener;
-import android.view.View.OnLayoutChangeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 
@@ -64,16 +58,15 @@ public class MainActivity extends  ActionBarActivity {
 	DatabaseHelper db;
 	
 	Map<String,String> Language;
-	ArrayList<Boolean> mark;
 	
-	
-	
+	private ClipboardManager myClipboard;
+		
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-       
+        myClipboard=(ClipboardManager)getSystemService(CLIPBOARD_SERVICE); 
         
         EditText_Source = (EditText) findViewById(R.id.EditText_dialog_Source);
         EditText_Result = (EditText) findViewById(R.id.EditText_Result);
@@ -310,7 +303,10 @@ public class MainActivity extends  ActionBarActivity {
         mActionBar.setDisplayShowHomeEnabled(false);
         mActionBar.setDisplayShowTitleEnabled(false);
                
-        mActionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#E5E4E2")));
+       // mActionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#E5E4E2")));
+        mActionBar.setBackgroundDrawable(new ColorDrawable(getResources()
+       	.getColor(R.color.platinum)));
+        
         
         mActionBar.setCustomView(R.layout.abs_layout);
         View view = this.getSupportActionBar().getCustomView();
@@ -454,7 +450,82 @@ public class MainActivity extends  ActionBarActivity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-											
+		
+				switch(position){
+				case 0:
+				
+					String result = EditText_Result.getText().toString();
+					myClipboard.setText(result);
+					Toast.makeText(getApplicationContext(), "Text has been copied into clipboard", Toast.LENGTH_SHORT).show();
+										
+					break;
+					
+				case 1:
+
+					String text = (String) myClipboard.getText();	
+					EditText_Source.setText(text);	
+									
+					break;
+					
+				case 2:
+					
+					EditText_Source.setText("");
+					
+					break;
+					
+				case 3:
+					
+					String SMS_text = EditText_Result.getText().toString();
+					
+					
+					if(!SMS_text.equals(""))
+					{
+					try {
+						 
+						Intent sendIntent = new Intent();
+						sendIntent.setAction(Intent.ACTION_SEND);
+						sendIntent.putExtra(Intent.EXTRA_TEXT, SMS_text);
+						sendIntent.setType("text/plain");
+						startActivity(sendIntent);
+						
+
+					} catch (Exception e) {
+						Toast.makeText(getApplicationContext(),
+							"Sending failed, please try again later!",
+							Toast.LENGTH_LONG).show();
+						e.printStackTrace();
+					}
+					
+					}
+					else
+					{
+						Toast.makeText(getApplicationContext(), "No text found . . .", Toast.LENGTH_SHORT).show();
+					}
+								
+					
+					break;
+					
+				case 4:
+					
+					Intent intendPrefs = new Intent(MainActivity.this, Preferences.class);
+					startActivity(intendPrefs);	
+					
+					
+					break;
+					
+				case 5:
+					
+					Intent intendHelp = new Intent(MainActivity.this, Help.class);
+					startActivity(intendHelp);
+					
+					
+					break;
+							
+				}
+				
+				
+				
+				
 				listPopupWindowOverflow.dismiss();
 				
 			}});
@@ -494,7 +565,7 @@ public class MainActivity extends  ActionBarActivity {
    	    				   	    				
    	    	 }});
    	     
-   	     
+   	   
    	     
    	     
    	     
@@ -614,8 +685,7 @@ public class MainActivity extends  ActionBarActivity {
     	
     	return treeMap;
     }
-    
-    
+        
     private void PrintMap(Map<String,String> map){
     	
     	Log.d("TAG", "Printing map");
@@ -625,8 +695,7 @@ public class MainActivity extends  ActionBarActivity {
     	    Log.d("TAG", "key = " + key + "; value = " + value);
     	}
     }
-    
-	    
+    	    
 	@Override
 	protected void onResume(){
 		
