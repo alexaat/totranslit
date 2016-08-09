@@ -3,6 +3,7 @@ package com.alexaat.totranslit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -11,30 +12,29 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
 	   private static final String DATABASE_NAME = "com.alexaat.totranslit.database.languages";
-       private static final int DATABASE_VERSION = 1;
-       public static final String RUSSIAN_TO_ENGLISH = "russian_to_english";
-       public static final String ENGLISH_TO_RUSSIAN = "english_to_russian";
-       private static final String COLUMN_KEY = "key";
-       private static final String COLUMN_VALUE = "value";
-       private static final String CREATE_RUSSIAN_TO_ENGLISH = "create table " +
-               RUSSIAN_TO_ENGLISH + "( " + COLUMN_KEY + " text, " +
-    		   COLUMN_VALUE
-               + " text);";
-       
-     private static final String CREATE_ENGLISH_TO_RUSSIAN = "create table " + 
-               ENGLISH_TO_RUSSIAN + "( " + COLUMN_KEY + " text, " +
-               COLUMN_VALUE + " text);";
+    private static final int DATABASE_VERSION = 1;
+    public static final String RUSSIAN_TO_ENGLISH = "russian_to_english";
+    public static final String ENGLISH_TO_RUSSIAN = "english_to_russian";
+    private static final String COLUMN_KEY = "key";
+    private static final String COLUMN_VALUE = "value";
+    private static final String CREATE_RUSSIAN_TO_ENGLISH = "create table " +
+            RUSSIAN_TO_ENGLISH + "( " + COLUMN_KEY + " text, " +
+ 		   COLUMN_VALUE
+            + " text);";
+    
+  private static final String CREATE_ENGLISH_TO_RUSSIAN = "create table " + 
+            ENGLISH_TO_RUSSIAN + "( " + COLUMN_KEY + " text, " +
+            COLUMN_VALUE + " text);";
 	
 	 public DatabaseHelper(Context context) {
-          super(context, DATABASE_NAME, null, DATABASE_VERSION);
-  }
+       super(context, DATABASE_NAME, null, DATABASE_VERSION);
+}
 
-    	@Override
+ 	@Override
 	 public void onCreate(SQLiteDatabase db) {
 		
 		 db.execSQL(CREATE_RUSSIAN_TO_ENGLISH);
@@ -45,7 +45,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	 public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		 db.execSQL("DROP TABLE IF EXISTS " + RUSSIAN_TO_ENGLISH);
 		 db.execSQL("DROP TABLE IF EXISTS " + ENGLISH_TO_RUSSIAN);
-         onCreate(db);
+      onCreate(db);
 	}
 	
 	 public void Insert(String table, String key, String value){
@@ -61,14 +61,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				 unique = false;
 			 }
 		 }
-          		 
-		 if(unique){
+       		 
 		 ContentValues insertValues = new ContentValues();
 		 insertValues.put(COLUMN_KEY, key);
 		 insertValues.put(COLUMN_VALUE, value);
-		 this.getWritableDatabase().insert(table, null, insertValues);
-		
 		 
+		 if(unique){
+			 //Insert
+		 this.getWritableDatabase().insert(table, null, insertValues);
+		 }else{
+			 // Update table
+			 this.getWritableDatabase().update(table, insertValues, "key=?", new String[]{key});
+			 
 		 }
 	 }
 	 
@@ -108,7 +112,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		 
 	 }
 	 
-	 public List<String> getListOfTables(){
+	 public List<String> getListOfAllTables(){
 		 List<String> tables = new ArrayList<String>();
 		 Cursor c = this.getReadableDatabase().rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null);
 			 
@@ -120,6 +124,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		    }
 		 		 
 		 return tables;
+	 }
+	 
+	 public List<String> getListOfTables(){
+		 
+		 List<String> tables =  getListOfAllTables();
+		 
+		 List<String> tablesTemp = new ArrayList<String>();
+	     for(String t:tables){
+	    		t = t.toLowerCase(Locale.UK);
+	    		if(t.contains("_to_")){
+	    			tablesTemp.add(t);
+	    		}
+	    		
+	    	}
+	    	tables = tablesTemp;
+	    	return tables;
+	    	
+	 }
+
+	 public void Delete(String table, String key){
+		 
+		 this.getWritableDatabase().delete(table, "key=?", new String[]{key});
 	 }
 	 
 }

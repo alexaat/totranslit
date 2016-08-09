@@ -1,6 +1,5 @@
 package com.alexaat.totranslit;
 
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -8,15 +7,14 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.prefs.Preferences;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.ListPopupWindow;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.internal.widget.ListPopupWindow;
 import android.text.ClipboardManager;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -34,8 +32,6 @@ import android.widget.Toast;
 
 
 
-
-
 public class MainActivity extends  ActionBarActivity {
 
 	
@@ -50,6 +46,8 @@ public class MainActivity extends  ActionBarActivity {
 	
 	String LANG1 = "com.alexaat.tottanslit.lang1_setting";
 	String LANG2 = "com.alexaat.tottanslit.lang2_setting";
+	
+	public static final String SELECTED_LANGUAGE_TAG ="com.alexaat.totranslit.selectedlanguage"; 
 	
 	
 	SharedPreferences sharedpreferences;
@@ -277,16 +275,7 @@ public class MainActivity extends  ActionBarActivity {
     	db = new DatabaseHelper(getApplicationContext());
     	tables = db.getListOfTables();
     	db.close();
-    	
-    	List<String> tablesTemp = new ArrayList<String>();
-    	for(String t:tables){
-    		t = t.toLowerCase(Locale.UK);
-    		if(t.contains("_to_")){
-    			tablesTemp.add(t);
-    		}
-    		
-    	}
-    	tables = tablesTemp;
+    	 	
     	
     	final Map<String,String> tablesMap = new HashMap<String,String>();
     	for(String t:tables){
@@ -336,8 +325,10 @@ public class MainActivity extends  ActionBarActivity {
         
         
         mActionBar.setDisplayShowCustomEnabled(true);
-        Toolbar parent =(Toolbar) view.getParent();
-        parent.setContentInsetsAbsolute(0,0);
+        //Toolbar parent =(Toolbar) view.getParent();
+        //parent.setContentInsetsAbsolute(0,0);
+        
+        
         
         List<String> keySet = new ArrayList<String>(tablesMap.keySet());
        
@@ -507,7 +498,9 @@ public class MainActivity extends  ActionBarActivity {
 					
 				case 4:
 					
-					Intent intendPrefs = new Intent(MainActivity.this, Preferences.class);
+					Intent intendPrefs = new Intent(MainActivity.this, AppPreferences.class);
+					intendPrefs.putExtra(SELECTED_LANGUAGE_TAG,tv_language1.getText() + "_to_" +  tv_language2.getText());
+					
 					startActivity(intendPrefs);	
 					
 					
@@ -646,15 +639,7 @@ public class MainActivity extends  ActionBarActivity {
     	        
     	        
     	   }
-    	
-    	
-    	
-    	//result = source.replace("bo", "б0");
-    	
-    	
-    	
-    	
-    	
+     	
     	return source;
     }
 

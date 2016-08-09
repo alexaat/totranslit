@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:background="@color/platinum" >
+
+     <Spinner
+        android:id="@+id/Spinner_languages"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_textview"
+        android:padding="4dp"/>
+    
+    
+        <GridView
+        android:id="@+id/GridView_Language_Table"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:numColumns="1"
+        android:layout_weight="1" >
+    </GridView>
+         
+
+<LinearLayout
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" >
+    
+    
+    <Button
+        android:id="@+id/Button_New"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:text="New" 
+        android:background="@drawable/rounded_button"
+        android:layout_marginLeft="2dp"
+        android:layout_marginBottom="1dp"
+        android:layout_marginRight="1dp"/>
+        
+    
+        <Button
+        android:id="@+id/Button_Add"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:text="Add"
+         android:background="@drawable/rounded_button"
+         android:layout_marginBottom="1dp"
+         android:layout_marginRight="1dp"
+         android:layout_marginLeft="1dp"
+        />
+    
+            
+    <Button
+        android:id="@+id/Button_Delete"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:text="Delete"
+        android:background="@drawable/rounded_button"
+        android:layout_marginRight="2dp" 
+        android:layout_marginBottom="1dp"
+        android:layout_marginLeft="1dp" />
+        
+    
+</LinearLayout>
+
+
+
+<LinearLayout
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" >
+    
+    
+    
+    
+    <Button
+        android:id="@+id/Button_Copy"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+         android:layout_weight="1"
+        android:text="Copy"
+         android:background="@drawable/rounded_button"
+         android:layout_marginLeft="2dp"
+         android:layout_marginBottom="2dp"
+         android:layout_marginTop="1dp"
+         android:layout_marginRight="1dp"/>
+
+    <Button
+        android:id="@+id/Button_Merge"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+         android:layout_weight="1"
+        android:text="Merge"
+         android:background="@drawable/rounded_button"
+         android:layout_marginBottom="2dp"
+         android:layout_marginTop="1dp"
+         android:layout_marginRight="1dp"
+         android:layout_marginLeft="1dp" />
+        
+        <Button
+        android:id="@+id/Button_Back"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:text="Back"
+         android:background="@drawable/rounded_button"
+         android:layout_marginRight="2dp" 
+         android:layout_marginBottom="2dp"
+         android:layout_marginTop="1dp" 
+         android:layout_marginLeft="1dp"/>
+    
+</LinearLayout>
+
+</LinearLayout>

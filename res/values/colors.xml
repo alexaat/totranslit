@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
- <color name="black">#000000</color>
+    
+<color name="black">#000000</color>
 
 <color name="silver">#C0C0C0</color>
 
@@ -28,5 +29,8 @@
 <drawable name="pressed_color">#7ec0ee</drawable> <!--custom color for pressed state -->
 <drawable name="normal_color">#00FFFFFF</drawable> <!--transperent color for normal state -->
 
+    
+
+    
     
 </resources>

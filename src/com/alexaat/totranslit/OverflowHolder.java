@@ -1,6 +1,6 @@
 package com.alexaat.totranslit;
 
-public class OverflowHolder {
+public class OverflowHolder  {
 
 	String text;
 	int id;
@@ -18,3 +18,5 @@ public class OverflowHolder {
 	}
 	
 }
+
+
