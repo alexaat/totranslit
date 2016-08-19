@@ -15,7 +15,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-	   private static final String DATABASE_NAME = "com.alexaat.totranslit.database.languages";
+	private static final String DATABASE_NAME = "com.alexaat.totranslit.database.languages";
     private static final int DATABASE_VERSION = 1;
     public static final String RUSSIAN_TO_ENGLISH = "russian_to_english";
     public static final String ENGLISH_TO_RUSSIAN = "english_to_russian";
@@ -26,7 +26,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
  		   COLUMN_VALUE
             + " text);";
     
-  private static final String CREATE_ENGLISH_TO_RUSSIAN = "create table " + 
+    private static final String CREATE_ENGLISH_TO_RUSSIAN = "create table " + 
             ENGLISH_TO_RUSSIAN + "( " + COLUMN_KEY + " text, " +
             COLUMN_VALUE + " text);";
 	
@@ -80,7 +80,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		 Map<String,String> values = new HashMap<String,String>();
 		 
 		 Cursor c = this.getReadableDatabase().query(table, null, null, null, null, null, null);
-		 c = this.getReadableDatabase().rawQuery("select * from "+ table, null);
+		 //c = this.getReadableDatabase().rawQuery("select * from "+ table, null);
 		 
 		 if(c.moveToFirst()){
 			 do{
@@ -146,6 +146,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	 public void Delete(String table, String key){
 		 
 		 this.getWritableDatabase().delete(table, "key=?", new String[]{key});
+	 }
+	 
+	 public void CreateTable(String table_name){
+	
+		String sql = "create table if not exists " + 
+					  table_name + "( " + COLUMN_KEY + " text, " +
+					  COLUMN_VALUE + " text);";
+		 
+		 this.getWritableDatabase().execSQL(sql);	 
+		 
+		 
+	 }
+
+	 public void DeleteTable(String table_name){
+		 
+		 this.getWritableDatabase().execSQL("DROP TABLE IF EXISTS " + table_name);
+	 }
+
+	 public boolean TableExists(String table_name){
+		
+		Cursor c = this.getReadableDatabase().rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='" + table_name + "'", null);
+		
+		if(c.getCount() == 0){
+			return false;
+		}
+		
+		return true; 
+		
 	 }
 	 
 }

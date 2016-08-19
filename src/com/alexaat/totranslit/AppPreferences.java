@@ -10,27 +10,26 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
+import android.view.WindowManager.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
-
-
-
-
 
 public class AppPreferences extends ActionBarActivity {
 
@@ -39,55 +38,10 @@ GridView Language_Table;
 Spinner Spinner_languages;
 Button Button_New;
 Button Button_Delete;
-Button Button_Add;
 Button Button_Copy;
-Button Button_Merge;
-Button Button_Back;
-	
 
 	
-	/*
-	Spinner preferencesSpinner; 
-	TextView preferencesTextView;
-	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_app_preferences);
-		
-		android.support.v7.app.ActionBar mActionBar =this.getSupportActionBar();
-	    mActionBar.setBackgroundDrawable(new ColorDrawable(getResources()
-	    .getColor(R.color.platinum)));
-		
-	    //getActionBar().setIcon(R.drawable.ic_menu_preferences);
-	    mActionBar.setIcon(R.drawable.ic_menu_preferences);
-		
-	    preferencesSpinner = (Spinner) findViewById(R.id.preferencesSpinner);
-	    
-	    DatabaseHelper db = new DatabaseHelper(this);
-	    List<String> tables = db.getListOfTables();
-	    db.close();
-	    
-	    for(int i = 0; i<tables.size(); i++){
-	    	String item = tables.get(i);
-	    	item = item.replace("_to_", ">>>");
-	    	tables.set(i, item);
-	    }
-	    
-	    
-	    ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, tables);
-	    preferencesSpinner.setAdapter(adapter);
-	    
-	    
-	    
-	    preferencesTextView = (TextView) findViewById(R.id.preferencesTextView);
-	    preferencesTextView.setText(tables.get(0));
-	    
-	    
-	    
-	}
-*/
-	
+
 	
     Map<String,String> normalized_table = new HashMap<String,String>();	
     Context context = AppPreferences.this;
@@ -108,10 +62,8 @@ Button Button_Back;
 		Language_Table = (GridView) findViewById(R.id.GridView_Language_Table);
 		Button_New =  (Button) findViewById(R.id.Button_New);
 		Button_Delete = (Button)  findViewById(R.id.Button_Delete);
-		Button_Add = (Button)  findViewById(R.id.Button_Add);
 		Button_Copy = (Button)  findViewById(R.id.Button_Copy);
-		Button_Merge = (Button)  findViewById(R.id.Button_Merge);
-		Button_Back = (Button)  findViewById(R.id.Button_Back);	
+		
   	
   	
 		String SELECTED_LANGUAGE = "";
@@ -125,9 +77,15 @@ Button Button_Back;
 		Set_Listeners();
   	
   	}
-
 	
   	private void Set_Spinner(String table_name){
+  		
+  		
+  		if(table_name == null){
+  		    ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, new ArrayList<String>());
+  	        Spinner_languages.setAdapter(adapter);
+  			return;
+  		}
   		
   		 	table_name = table_name.replace("_to_", " >>> ");
   		
@@ -185,28 +143,28 @@ Button Button_Back;
 		
 		case 0:
 			
-			Button_Add.setEnabled(false);
+
 			Button_Delete.setEnabled(false);
 			Button_Copy.setEnabled(false);
-			Button_Merge.setEnabled(false);
+
 			
 			break;
 		
 		case 1:
 			
-			Button_Add.setEnabled(true);
+
 			Button_Delete.setEnabled(true);
 			Button_Copy.setEnabled(true);
-			Button_Merge.setEnabled(false);
+
 			
 			break;
 		
 		default:
 			
-			Button_Add.setEnabled(true);
+
 			Button_Delete.setEnabled(true);
 			Button_Copy.setEnabled(true);
-			Button_Merge.setEnabled(true);
+
 			
 			break;
 		}
@@ -263,6 +221,251 @@ Button Button_Back;
 			
 				
 			}});
+    	
+    	Spinner_languages.setOnLongClickListener(new OnLongClickListener(){
+
+			@Override
+			public boolean onLongClick(View arg0) {
+				
+				
+				final Dialog dialog_add_symbol = new Dialog(context);
+				
+				dialog_add_symbol.setContentView(R.layout.add_symbol_dialog);
+					
+				dialog_add_symbol.getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+								
+				
+				String title = "Add new character to:";
+				dialog_add_symbol.setTitle(title);
+										
+			
+				
+				TextView TextView_Language_Table = (TextView) dialog_add_symbol.findViewById(R.id.TextView_Language_Table);
+				
+				
+				final EditText EditText_add_key = (EditText) dialog_add_symbol.findViewById(R.id.EditText_add_key);
+								
+				final EditText EditText_add_value = (EditText) dialog_add_symbol.findViewById(R.id.EditText_add_value);
+				
+				Button Button_add_ok = (Button) dialog_add_symbol.findViewById(R.id.Button_add_ok);
+				Button Button_add_cancel = (Button) dialog_add_symbol.findViewById(R.id.Button_add_cancel);
+				final CheckBox CheckBox_add_Case = (CheckBox) dialog_add_symbol.findViewById(R.id.CheckBox_add_Case);
+				
+				
+				EditText_add_key.addTextChangedListener(new TextWatcher() {
+
+					@Override
+					public void afterTextChanged(Editable arg0) {
+						
+						
+						String first_char_in_text = "";
+						String text = arg0.toString();
+						if(!text.equals("")){
+						first_char_in_text = text.substring(0,1);
+						}
+						//Toast.makeText(context, text, 50).show();
+						
+						if(!text.equals("")){
+							
+							String texttoUpper = text.toUpperCase();
+							String first_char_in_texttoUpper = texttoUpper.substring(0,1);
+							
+							
+							if(first_char_in_text.equals(first_char_in_texttoUpper)){
+							
+								CheckBox_add_Case.setChecked(false);
+								CheckBox_add_Case.setEnabled(false);
+								
+							}
+							else
+							{
+								CheckBox_add_Case.setEnabled(true);
+							}
+							
+							
+						}
+						else
+						{
+							CheckBox_add_Case.setEnabled(true);
+						}
+						
+						
+						
+						
+					}
+
+					@Override
+					public void beforeTextChanged(CharSequence arg0, int arg1,
+							int arg2, int arg3) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void onTextChanged(CharSequence arg0, int arg1,
+							int arg2, int arg3) {
+						
+						
+						
+						
+					}});
+				
+				
+				
+				
+				final String current_language = Spinner_languages.getSelectedItem().toString().replace(" >>> ", "_to_");
+				TextView_Language_Table.setText(Spinner_languages.getSelectedItem().toString());
+				///////////////////////////////////////////////////
+							
+				Button_add_ok.setOnClickListener(new OnClickListener(){
+			
+					
+					@Override
+					public void onClick(View v) {
+						
+
+						final String new_key = EditText_add_key.getText().toString();
+						final String new_value = EditText_add_value.getText().toString();
+
+						if(new_key.equals("") || new_value.equals("")){
+							
+							Toast.makeText(getApplicationContext(), "Please enter key and value . . .  ", Toast.LENGTH_SHORT).show();
+						}
+						else
+						{
+							
+							if(CheckBox_add_Case.isChecked()){
+							
+								dialog_add_symbol.dismiss();
+								
+				    			
+				    			DatabaseHelper db = new DatabaseHelper(AppPreferences.this);
+			    				db.Insert(current_language,new_key.toLowerCase(), new_value.toLowerCase());
+			    				db.close();
+			    				SwapInsert(current_language,new_key.toLowerCase(), new_value.toLowerCase());
+			    				
+				    			
+				    			if(new_key.length()==1){
+				    			
+				    			if(new_value.length()==1){
+				    			
+				    				db = new DatabaseHelper(AppPreferences.this);
+				    				db.Insert(current_language, new_key.toUpperCase(), new_value.toUpperCase());
+				    				db.close();
+				    				SwapInsert(current_language, new_key.toUpperCase(), new_value.toUpperCase());
+				    				
+				    			
+				    		    }
+				    			else if(new_value.length()>1){
+				    								    			
+				    				db = new DatabaseHelper(AppPreferences.this);
+				    				db.Insert(current_language,
+				    						new_key.toUpperCase(),
+				    						new_value.toLowerCase().substring(0,1).toUpperCase()+new_value.toLowerCase().substring(1));
+				    				db.close();
+				    				SwapInsert(current_language,
+				    						new_key.toUpperCase(),
+				    						new_value.toLowerCase().substring(0,1).toUpperCase()+new_value.toLowerCase().substring(1));
+				    			
+				    			
+				    			
+				    			}
+				    			
+				    		}
+				    		else if(new_key.length()>1){
+				    			
+				    			
+				    			
+				    			if(new_value.length()==1){
+						    		   
+				    			
+					    			db = new DatabaseHelper(AppPreferences.this);
+				    				db.Insert(current_language,
+				    						new_key.toUpperCase(),
+				    						new_value.toUpperCase());
+				    				
+				    				db.Insert(current_language,
+				    						new_key.toLowerCase().substring(0,1).toUpperCase()+new_key.toLowerCase().substring(1),
+				    						new_value.toUpperCase());
+				    				db.close();
+				    				
+				    				SwapInsert(current_language,
+				    						new_key.toUpperCase(),
+				    						new_value.toUpperCase());
+				    				SwapInsert(current_language,
+				    						new_key.toLowerCase().substring(0,1).toUpperCase()+new_key.toLowerCase().substring(1),
+				    						new_value.toUpperCase());
+				    			
+				    			
+				    			
+				    			}
+					    			else if(new_value.length()>1){
+					    				 
+						    			db = new DatabaseHelper(AppPreferences.this);
+					    				db.Insert(current_language,
+					    						new_key.toUpperCase(),
+					    						new_value.toUpperCase());
+					    				
+					    				db.Insert(current_language,
+					    						new_key.toLowerCase().substring(0,1).toUpperCase()+new_key.toLowerCase().substring(1),
+					    						new_value.toLowerCase().substring(0,1).toUpperCase()+new_value.toLowerCase().substring(1));
+					    				db.close();
+					    							
+					    				SwapInsert(current_language,
+					    						new_key.toUpperCase(),
+					    						new_value.toUpperCase());
+					    				SwapInsert(current_language,
+					    						new_key.toLowerCase().substring(0,1).toUpperCase()+new_key.toLowerCase().substring(1),
+					    						new_value.toLowerCase().substring(0,1).toUpperCase()+new_value.toLowerCase().substring(1));
+					    				
+					    				
+					    			
+					    			}
+				    			}
+																						
+								
+							}
+							else  // if(!CheckBox_add_Case.isChecked()){
+							{
+									
+								dialog_add_symbol.dismiss();
+					
+									DatabaseHelper db = new DatabaseHelper(AppPreferences.this);
+				    				db.Insert(current_language,
+				    						new_key,
+				    						new_value);
+				    				db.close();
+				    				SwapInsert(current_language,
+				    						new_key,
+				    						new_value);
+				    							
+							}
+							
+							Set_Spinner(Spinner_languages.getSelectedItem().toString());
+							
+						}
+						
+					}
+								
+				});
+				
+				
+				
+				Button_add_cancel.setOnClickListener(new OnClickListener(){
+
+					@Override
+					public void onClick(View v) {
+						
+						dialog_add_symbol.dismiss();
+					}});
+				
+				
+				dialog_add_symbol.show();
+				
+				
+				
+				return true;
+			}});
     	    	
     	Language_Table.setOnItemClickListener(new OnItemClickListener(){
 
@@ -273,7 +476,8 @@ Button Button_Back;
 				// custom dialog
 				final Dialog dialog_edit = new Dialog(context);
 				dialog_edit.setContentView(R.layout.edit_layout);
-				dialog_edit.setTitle("Edit                        ");
+				dialog_edit.getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+				dialog_edit.setTitle("Edit");
 				
 				// Set controls
 				Button edit_layout_Save_Button = (Button) dialog_edit.findViewById(R.id.edit_layout_Save_Button);
@@ -393,8 +597,275 @@ Button Button_Back;
 				
 			}});
     	
+    	Button_New.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View arg0) {
+				
+				// custom dialog
+				final Dialog dialog = new Dialog(context);
+				dialog.setContentView(R.layout.new_language_dialog);
+				dialog.getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+				
+				dialog.setTitle("Create new table");
+	 
+
+				Button dialogButton_Cancel = (Button) dialog.findViewById(R.id.Button_dialog_cancel);
+				// if Cancel button is clicked, close the custom dialog
+				dialogButton_Cancel.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						dialog.dismiss();
+					}
+				});
+	 
+				
+				Button Button_dialog_Ok = (Button) dialog.findViewById(R.id.Button_dialog_Ok);
+			    final EditText EditText_dialog_Source = (EditText) dialog.findViewById(R.id.EditText_dialog_Source);
+				final EditText EditText_dialog_Target = (EditText) dialog.findViewById(R.id.EditText_dialog_Target);
+							
+													
+				// if OK button is clicked, close the custom dialog
+				Button_dialog_Ok.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v) {
+					
+						final String source_text = EditText_dialog_Source.getText().toString();
+						final String target_text =  EditText_dialog_Target.getText().toString();
+						
+						if(source_text.contains("_to_") || target_text.contains("_to_"))
+						{
+							Toast.makeText(getApplicationContext(), "table cannot contain _To_ expression", Toast.LENGTH_SHORT).show();
+						}
+						else
+						{
+						final String table_name = source_text+"_to_"+target_text;
+						final String table_name_mirror = target_text +"_to_"+ source_text;
+						
+						String table_name_raw = source_text.trim() +" >>> "+target_text.trim();
+						
+						
+						if(!source_text.equals("") && !target_text.equals(""))
+						{		
+							DatabaseHelper db = new DatabaseHelper(AppPreferences.this);
+							db.CreateTable(table_name);
+							db.CreateTable(table_name_mirror);
+							db.close();
+							dialog.dismiss();
+							Set_Spinner(table_name_raw);
+												
+						}
+						else
+						{
+							Toast.makeText(getApplicationContext(), "table name is invalid . . .", Toast.LENGTH_SHORT).show();
+						}
+						}							
+						
+					}});
+				
+				dialog.show();
+				
+			}});
+    	
+    	Button_Delete.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View arg0) {
+				final String table_name = Spinner_languages.getSelectedItem().toString().replace(" >>> ", "_to_");
+				
+				String[] language_parts = table_name.split("_to_");
+				String language_raw_parts_first = language_parts[0].trim();
+				String language_raw_parts_last = language_parts[language_parts.length-1].trim();
+				final String table_name_mirror = language_raw_parts_last+"_to_"+language_raw_parts_first;
+											
+				
+				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+     			// set title
+				alertDialogBuilder.setTitle("Delete . . .");
+				// set dialog message
+				alertDialogBuilder.setMessage("Delete "+table_name.replace("_to_", " >>> ")+" ?")
+					.setCancelable(false)
+					.setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog,int id) {
+							
+							DatabaseHelper db = new DatabaseHelper(AppPreferences.this);
+							db.DeleteTable(table_name);
+							db.DeleteTable(table_name_mirror);
+							Set_Spinner(db.getListOfTables().size()>0 ? db.getListOfTables().get(0).replace("_to_", " >>> "):null);
+							db.close();
+							dialog.dismiss();
+							String text = table_name.replace("_to_", " >>> ")+ " deleted . . .";
+							Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+							text = table_name_mirror.replace("_to_", " >>> ")+ " deleted . . .";
+							Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+							
+																					
+						}
+					  })
+					.setNegativeButton("No",new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog,int id) {
+							dialog.dismiss();
+												
+						}
+					});
+	 
+					// create alert dialog
+					AlertDialog alertDialog = alertDialogBuilder.create();
+	 
+					// show it
+					alertDialog.show();
+			
+			}});
+        	
+    	Button_Copy.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View arg0) {
+				
+				// custom dialog
+				final Dialog dialog_copy = new Dialog(context);
+				dialog_copy.setContentView(R.layout.copy_layout);
+				dialog_copy.getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+				dialog_copy.setTitle("Copy Table                                                                              ");
+							
+				final Spinner Spinner_copy_layout = (Spinner) dialog_copy.findViewById(R.id.Spinner_copy_layout);
+				final EditText EditText_copy_layout_source_language = (EditText) dialog_copy.findViewById(R.id.EditText_copy_layout_source_language);
+				final EditText EditText_copy_layout_target_language = (EditText) dialog_copy.findViewById(R.id.EditText_copy_layout_target_language);
+				Button Button_copy_layout_Ok = (Button) dialog_copy.findViewById(R.id.Button_copy_layout_Ok);
+				Button Button_copy_layout_Cancel = (Button) dialog_copy.findViewById(R.id.Button_copy_layout_Cancel);
+							
+				/// Set Spinner
+		        ArrayList<String> languages_array = new ArrayList<String>();
+		        
+		        /// Get list of tables in database
+
+		        List<String> Table_Names_New = new ArrayList<String>();
+		        DatabaseHelper db = new DatabaseHelper(AppPreferences.this);
+		        Table_Names_New = db.getListOfTables();
+		        db.close();
+		        
+		       
+		        ///////////////////////////////
+		        
+		        // Display in format Source > > > Result
+		        for(int i = 0; i<Table_Names_New.size();i++){
+		        	
+		        	String Table_Name_Parts[] = Table_Names_New.get(i).split("_to_");
+		        	String Table_Name_To_Display = Table_Name_Parts[0]+" >>> "+ Table_Name_Parts[Table_Name_Parts.length-1];
+		        	languages_array.add(Table_Name_To_Display);
+		        	
+		        }
+		         
+		    
+		        Spinner_copy_layout.setAdapter(new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, languages_array));
+				/// End of set spinner
+		        	
+       
+		        
+		        Button_copy_layout_Ok.setOnClickListener(new OnClickListener(){
+
+					@Override
+					public void onClick(View arg0) {
+						
+						String _copy_layout_source_language = EditText_copy_layout_source_language.getText().toString().trim();
+						String _copy_layout_target_language = EditText_copy_layout_target_language.getText().toString().trim();
+						
+						
+						if(_copy_layout_source_language.contains("_to_") || _copy_layout_target_language.contains("_To_"))
+						{
+						
+							Toast.makeText(getApplicationContext(), "table name cannot contain _to_", Toast.LENGTH_SHORT).show();
+							
+												
+						}
+						else
+						{
+							
+						    String table_name_copy = _copy_layout_source_language+"_to_"+ _copy_layout_target_language;
+							String new_table_name =  table_name_copy.replace("_to_", " >>> ");
+							String table_name_raw = Spinner_copy_layout.getSelectedItem().toString();
+							String spinner_language = table_name_raw.replace(" >>> ", "_to_");
+														
+							String sql = "INSERT INTO [" + table_name_copy +"] SELECT * FROM [" + spinner_language+"]";
+							
+							DatabaseHelper db = new DatabaseHelper(AppPreferences.this);
+						
+							if(!db.TableExists(table_name_copy)){
+								db.CreateTable(table_name_copy);
+								db.getWritableDatabase().execSQL(sql);
+								 Toast.makeText(getApplicationContext(), "table is copied . . . ", Toast.LENGTH_SHORT).show();
+							     Set_Spinner(new_table_name);
+																
+							}
+							else{
+								Toast.makeText(getApplicationContext(), "table "+ table_name_copy+ " exists . . . ", Toast.LENGTH_SHORT).show();	
+							}
+											
+							
+							
+							 String table_name_copy_copy =  _copy_layout_target_language +"_to_" + _copy_layout_source_language;
+							 String spinner_language_copy = "";
+							 String[] spinner_language_parts =  spinner_language.split("_to_");
+							 spinner_language_copy = spinner_language_parts[spinner_language_parts.length-1]
+									 				+ "_to_"
+									 				+spinner_language_parts[0];
+										 
+							 sql = "INSERT INTO [" + table_name_copy_copy +"] SELECT * FROM [" + spinner_language_copy+"]";
+							
+							 if(!db.TableExists(table_name_copy_copy)){
+						 		 db.CreateTable(table_name_copy_copy);
+						 		 db.getWritableDatabase().execSQL(sql);
+						 		 Toast.makeText(getApplicationContext(), "table is copied . . . ", Toast.LENGTH_SHORT).show();
+							     Set_Spinner(table_name_copy_copy.replace("_to_", " >>> "));
+							 }else{
+								 Toast.makeText(getApplicationContext(), "table "+ table_name_copy_copy+ " exists . . . ", Toast.LENGTH_SHORT).show();	
+							 }
+							
+							
+							dialog_copy.dismiss();
+							db.close();	
+							
+						}
+						
+						
+						
+					}});
+		        
+		        Button_copy_layout_Cancel.setOnClickListener(new OnClickListener(){
+
+					@Override
+					public void onClick(View arg0) {
+						
+						dialog_copy.dismiss();
+					}});
+		        
+		        
+		       
+		        
+			
+				dialog_copy.show();
+				
+				
+			}});
+    	
     }
 
-
+    private void SwapInsert(String language, String key, String value){
+    	
+    	String[] language_parts = language.split("_to_");
+    	String part1 = language_parts[0];
+    	String part2 = language_parts[language_parts.length-1];
+    	String new_language = part2+"_to_"+part1;
+    	
+    	DatabaseHelper db = new DatabaseHelper(this);
+    	if(db.TableExists(new_language)){
+    		db.Insert(new_language, value, key);    		
+    	}
+    	db.close();
+    	
+    	
+    }
+    
+    
 
 }

@@ -4,7 +4,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@color/bronze" >
+   android:background="@color/sand" >
 
     
     
@@ -22,7 +22,8 @@
         android:text="Key"
         android:layout_weight="1" 
         android:layout_marginLeft="5dp"
-        android:textSize="20sp" />
+        android:textSize="20sp" 
+        android:textColor="@color/black"/>
 
       <TextView
           android:id="@+id/edit_layout_value_TextView"
@@ -30,7 +31,8 @@
           android:layout_height="wrap_content"
           android:text="Value"
           android:layout_weight="1"
-          android:textSize="20sp"/>
+          android:textSize="20sp"
+          android:textColor="@color/black"/>
     
     
         </LinearLayout>

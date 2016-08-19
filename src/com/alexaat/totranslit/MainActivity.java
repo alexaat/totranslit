@@ -71,10 +71,7 @@ public class MainActivity extends  ActionBarActivity {
                
         SetInitialTables();
        
-        SetPopMenu();
-       
-        SetListeners();
-        
+	
       
        
        
@@ -536,7 +533,18 @@ public class MainActivity extends  ActionBarActivity {
       	 sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
       	 String lang1 =  sharedpreferences.getString(LANG1, lang1_def);
    	     String lang2 =  sharedpreferences.getString(LANG2, tablesMap.get(lang1));
-   	
+   	     
+   	     DatabaseHelper db = new DatabaseHelper(this);
+   	     if(db.TableExists(lang1 + "_to_" +lang2 ) == false){
+   	    	   	    	
+   	    	 lang1 =  lang1_def;
+   	   	     lang2 =  tablesMap.get(lang1);
+   	    	 
+   	    	 
+   	     }
+   	     db.close();
+   	     
+   	     
    	     tv1.setText(lang1);
    	     tv2.setText(lang2);
    	 
@@ -684,7 +692,15 @@ public class MainActivity extends  ActionBarActivity {
 	@Override
 	protected void onResume(){
 		
+		SetPopMenu(); 
+        
+        SetListeners();  
+				
 		Language = SetLanguageMap();
+    	
 		super.onResume();
 	}
+
+
+
 }
