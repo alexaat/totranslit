@@ -443,9 +443,12 @@ public class MainActivity extends  ActionBarActivity {
 				case 0:
 				
 					String result = EditText_Result.getText().toString();
+					if(result.trim().equals("")){
+						Toast.makeText(getApplicationContext(), "Nothing to copy", Toast.LENGTH_SHORT).show();
+					}else{
 					myClipboard.setText(result);
 					Toast.makeText(getApplicationContext(), "Text has been copied into clipboard", Toast.LENGTH_SHORT).show();
-										
+					}			
 					break;
 					
 				case 1:
