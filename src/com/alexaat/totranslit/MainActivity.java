@@ -46,6 +46,9 @@ public class MainActivity extends  ActionBarActivity {
 	
 	String LANG1 = "com.alexaat.tottanslit.lang1_setting";
 	String LANG2 = "com.alexaat.tottanslit.lang2_setting";
+	String SOURCE = "com.alexaat.tottanslit.edittext_source";
+	String TARGET = "com.alexaat.tottanslit.edittext_target";
+	
 	
 	public static final String SELECTED_LANGUAGE_TAG ="com.alexaat.totranslit.selectedlanguage"; 
 	
@@ -537,6 +540,10 @@ public class MainActivity extends  ActionBarActivity {
       	 String lang1 =  sharedpreferences.getString(LANG1, lang1_def);
    	     String lang2 =  sharedpreferences.getString(LANG2, tablesMap.get(lang1));
    	     
+   	     String source = sharedpreferences.getString(SOURCE, "");
+   	     String target =  sharedpreferences.getString(TARGET, "");
+   	     
+   	     
    	     DatabaseHelper db = new DatabaseHelper(this);
    	     if(db.TableExists(lang1 + "_to_" +lang2 ) == false){
    	    	   	    	
@@ -551,6 +558,10 @@ public class MainActivity extends  ActionBarActivity {
    	     tv1.setText(lang1);
    	     tv2.setText(lang2);
    	 
+   	     EditText_Source.setText(source);
+  	     EditText_Result.setText(target);
+   	     
+   	     
    	     
    	     //4.Set Backgrounds and swap listener
    	     imageButtonMenu.setBackgroundResource(R.drawable.lable_bg);   
@@ -582,6 +593,11 @@ public class MainActivity extends  ActionBarActivity {
    	 SharedPreferences.Editor editor = sharedpreferences.edit();
    	 editor.putString(LANG1, (String) tv_language1.getText());
      editor.putString(LANG2, (String) tv_language2.getText());
+     
+     editor.putString(SOURCE, EditText_Source.getText().toString());
+     editor.putString(TARGET, EditText_Result.getText().toString());
+     
+     
      editor.commit();
      
     	super.onPause();
