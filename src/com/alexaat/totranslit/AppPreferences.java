@@ -917,6 +917,13 @@ Button Button_Copy;
     	
     }
     
-    
+    @Override
+	protected void onResume(){
+		Toast.makeText(getApplicationContext(), "To add symbol press and hold languages title", Toast.LENGTH_SHORT).show();	
+    	
+		super.onResume();
+	}
+
+
 
 }

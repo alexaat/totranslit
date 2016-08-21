@@ -5,22 +5,25 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_info">Info</string>
-    <string name="info_content"> ToTranslit allows the user
-	 to swap alphabet letters in input text quickly and conveniently.
+    <string name="info_content"> ToTranslit allows
+     to swap alphabet letters in input text quickly and conveniently.
 	 Main screen contains language picker at the top, input text below
-	 box and output text box at the bottom. Next to input text box there
-	 is Paste button. This button allows the user to insert text from clipboard.
-	 Buttons at the bottom of the main screen: share result, copy result to clipboard,
-	 settings, clear, info. Application comes with predefined languages:
-	 Russian >>> Translt and Translit >>> Russian. ToTranslit allows user to create,
-	 edit and to delete language tables. In order to create new table go to settings,
+	 box and output text box at the bottom. Just start typing in the top box -
+	 application will change letters accordingly and will display result in the bottom box.
+	 There is a menu picker in top-right corner. Copy button will copy result into clipboard, 
+	 Paste button will paste content of clipboard into top box, Delete button will clear boxes, 
+	 Share button allows to share result via text, Facebook, e-mail, etc.
+	 Application comes with predefined languages:
+	 Russian >>> English and English >>> Russian. You can make changes to this tables.
+	 Click on preferences menu option, then press and hold languages title.
+	 Dialog box that pops up allows you to add symbol to this table. Case check-box allows to add upper
+	 and lower case symbols at the same time. ToTranslit allows you user to create,
+	 edit and to delete language tables. In order to create new table go to preferences,
 	 then tap New button. Type in the boxes provided a source language and a result language
-	 for example Greek in left box, and English into right box. Mirror check-box will create two
-	 tables with opposite names for example: Greek >>> English and English >>> Greek. Add button
-	 allows the user to add new symbol into current table. Case check-box allows to add upper
-	 and lower case symbols at the same time. Delete button allows to delete current table
-	 Copy button allows to make a copy of a table using different name. Merge button allows
-	 to merge two tables into one.</string>
+	 for example Greek in left box, and English into right box.  Delete button allows to delete current table.
+	 Copy button allows to make a copy of a table using different name.
+	 To restore initial tables press and hold Delete button.
+	 Thank you for using ToTranslit.</string>
    
     <string name="title_activity_help">Help</string>
     <string name="title_activity_app_preferences">Preferences</string>
