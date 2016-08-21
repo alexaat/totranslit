@@ -49,6 +49,7 @@ public class MainActivity extends  ActionBarActivity {
 	String SOURCE = "com.alexaat.tottanslit.edittext_source";
 	String TARGET = "com.alexaat.tottanslit.edittext_target";
 	
+	public static final String SET_INITIAL_TABLES_KEY = "com.alexaat.totranslit.SET_INITIAL_TABLES_KEY"; 
 	
 	public static final String SELECTED_LANGUAGE_TAG ="com.alexaat.totranslit.selectedlanguage"; 
 	
@@ -71,19 +72,32 @@ public class MainActivity extends  ActionBarActivity {
         
         EditText_Source = (EditText) findViewById(R.id.EditText_dialog_Source);
         EditText_Result = (EditText) findViewById(R.id.EditText_Result);
-               
+        
+        
         SetInitialTables();
-       
-	
       
-       
-       
-        
-        
+            
     } 
 
     private void SetInitialTables(){
-    db = new DatabaseHelper(getApplicationContext());
+    	
+    sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+    boolean set_tables =  sharedpreferences.getBoolean(SET_INITIAL_TABLES_KEY, true);
+    	 
+    	 
+    if(set_tables){	
+ 
+    	db = new DatabaseHelper(getApplicationContext());
+    
+   
+    	if(db.TableExists(DatabaseHelper.ENGLISH_TO_RUSSIAN)){
+    	db.DeleteTable(DatabaseHelper.ENGLISH_TO_RUSSIAN);
+      	}
+       	db.CreateTable(DatabaseHelper.ENGLISH_TO_RUSSIAN);
+    
+ 
+    
+    
     Map<String, String> map = new  HashMap<String, String>();
     map = db.Get(DatabaseHelper.ENGLISH_TO_RUSSIAN);
     if(map.size()==0){
@@ -186,6 +200,15 @@ public class MainActivity extends  ActionBarActivity {
     }
     
     map = new  HashMap<String, String>();
+    
+    
+    
+    if(db.TableExists(DatabaseHelper.RUSSIAN_TO_ENGLISH)){
+    	db.DeleteTable(DatabaseHelper.RUSSIAN_TO_ENGLISH);
+      }
+    db.CreateTable(DatabaseHelper.RUSSIAN_TO_ENGLISH);
+    
+    
     map = db.Get(DatabaseHelper.RUSSIAN_TO_ENGLISH);
     if(map.size()==0){ 
     map = new  HashMap<String, String>();
@@ -265,6 +288,14 @@ public class MainActivity extends  ActionBarActivity {
         
     }
     db.close();
+    
+     sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+  	 SharedPreferences.Editor editor = sharedpreferences.edit();
+  	 editor.putBoolean(SET_INITIAL_TABLES_KEY, false);
+     editor.commit();
+    
+    
+     }
     }
   
     private void SetPopMenu(){
@@ -710,6 +741,8 @@ public class MainActivity extends  ActionBarActivity {
     	    
 	@Override
 	protected void onResume(){
+		
+		
 		
 		SetPopMenu(); 
         

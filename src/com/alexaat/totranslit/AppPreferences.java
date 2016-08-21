@@ -10,6 +10,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -689,6 +690,13 @@ Button Button_Copy;
 						public void onClick(DialogInterface dialog,int id) {
 							
 							DatabaseHelper db = new DatabaseHelper(AppPreferences.this);
+							
+							if(db.getListOfTables().size()==2){
+								Toast.makeText(getApplicationContext(), "Cannot delete the last table.\nCreate another table first ...", Toast.LENGTH_LONG).show();
+								db.close();
+							
+							}
+							else{	
 							db.DeleteTable(table_name);
 							db.DeleteTable(table_name_mirror);
 							Set_Spinner(db.getListOfTables().size()>0 ? db.getListOfTables().get(0).replace("_to_", " >>> "):null);
@@ -698,7 +706,7 @@ Button Button_Copy;
 							Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
 							text = table_name_mirror.replace("_to_", " >>> ")+ " deleted . . .";
 							Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
-							
+							}
 																					
 						}
 					  })
@@ -717,6 +725,49 @@ Button Button_Copy;
 			
 			}});
         	
+    	Button_Delete.setOnLongClickListener(new OnLongClickListener(){
+
+			@Override
+			public boolean onLongClick(View arg0) {
+				
+				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+     			// set title
+				alertDialogBuilder.setTitle("Reset");
+				// set dialog message
+				alertDialogBuilder.setMessage("Would you like to reset initial tables?")
+					.setCancelable(false)
+					.setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog,int id) {
+							  
+							SharedPreferences sharedpreferences = getSharedPreferences(MainActivity.MyPREFERENCES, Context.MODE_PRIVATE);
+							SharedPreferences.Editor editor = sharedpreferences.edit();
+							editor.putBoolean(MainActivity.SET_INITIAL_TABLES_KEY, true);
+							editor.commit();
+							Toast.makeText(getApplicationContext(), "Restart application to finish reset", Toast.LENGTH_SHORT).show();
+							
+							
+																					
+						}
+					  })
+					.setNegativeButton("No",new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog,int id) {
+							dialog.dismiss();
+												
+						}
+					});
+	 
+					// create alert dialog
+					AlertDialog alertDialog = alertDialogBuilder.create();
+	 
+					// show it
+					alertDialog.show();
+				
+				
+				
+				
+				return true;
+			}});
+    	
     	Button_Copy.setOnClickListener(new OnClickListener(){
 
 			@Override

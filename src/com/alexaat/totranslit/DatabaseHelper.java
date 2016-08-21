@@ -78,9 +78,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	 
 	 public TreeMap<String,String> Get(String table){
 		 Map<String,String> values = new HashMap<String,String>();
-		 
 		 Cursor c = this.getReadableDatabase().query(table, null, null, null, null, null, null);
-		 //c = this.getReadableDatabase().rawQuery("select * from "+ table, null);
+		
 		 
 		 if(c.moveToFirst()){
 			 do{
