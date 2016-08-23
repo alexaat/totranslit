@@ -35,6 +35,10 @@ import android.widget.Toast;
 public class MainActivity extends  ActionBarActivity {
 
 	
+	public static final String TO_database = "_to_";
+	public static final String TO_dispaly = " ➞ ";
+	//public static final String TO_dispaly = " >> ";
+	
 	EditText EditText_Source;
 	EditText EditText_Result;
 	ListPopupWindow listPopupWindow;
@@ -311,7 +315,9 @@ public class MainActivity extends  ActionBarActivity {
     	final Map<String,String> tablesMap = new HashMap<String,String>();
     	for(String t:tables){
     		
-    		String[] tables_parts = t.split("_to_");
+    		
+    		
+    		String[] tables_parts = t.split(TO_database);
     		tablesMap.put(tables_parts[0], tables_parts[1]);
     		    		
     	}
@@ -366,7 +372,7 @@ public class MainActivity extends  ActionBarActivity {
         
         
         listPopupWindow = new ListPopupWindow(this);
-        listPopupWindow.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, keySet));
+        listPopupWindow.setAdapter(new ArrayAdapter<String>(this,R.layout.simple_list_item, keySet));
         listPopupWindow.setAnchorView(tv1);
         listPopupWindow.setModal(true);
         
@@ -386,7 +392,7 @@ public class MainActivity extends  ActionBarActivity {
     	
         
         listPopupWindow2 = new ListPopupWindow(this);
-        listPopupWindow2.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, keySet));
+        listPopupWindow2.setAdapter(new ArrayAdapter<String>(this,R.layout.simple_list_item, keySet));
         listPopupWindow2.setAnchorView(tv2);
         listPopupWindow2.setModal(true);
         
@@ -532,8 +538,10 @@ public class MainActivity extends  ActionBarActivity {
 					
 				case 4:
 					
+					
+					
 					Intent intendPrefs = new Intent(MainActivity.this, AppPreferences.class);
-					intendPrefs.putExtra(SELECTED_LANGUAGE_TAG,tv_language1.getText() + "_to_" +  tv_language2.getText());
+					intendPrefs.putExtra(SELECTED_LANGUAGE_TAG,tv_language1.getText() + TO_database +  tv_language2.getText());
 					
 					startActivity(intendPrefs);	
 					
@@ -574,9 +582,11 @@ public class MainActivity extends  ActionBarActivity {
    	     String source = sharedpreferences.getString(SOURCE, "");
    	     String target =  sharedpreferences.getString(TARGET, "");
    	     
+   	
+   	     
    	     
    	     DatabaseHelper db = new DatabaseHelper(this);
-   	     if(db.TableExists(lang1 + "_to_" +lang2 ) == false){
+   	     if(db.TableExists(lang1 + TO_database +lang2 ) == false){
    	    	   	    	
    	    	 lang1 =  lang1_def;
    	   	     lang2 =  tablesMap.get(lang1);
@@ -665,11 +675,13 @@ public class MainActivity extends  ActionBarActivity {
     
     private Map<String,String> SetLanguageMap(){
     	  
+    	
+    	
     	Map<String,String> LanguageMap = new HashMap<String,String>();
     	db = new DatabaseHelper(getApplicationContext());
     	String source = tv_language1.getText().toString();
     	String target = tv_language2.getText().toString();
-    	String table = 	source + "_to_" +	target;
+    	String table = 	source + TO_database +	target;
     	LanguageMap = db.Get(table);
     	db.close();
     	

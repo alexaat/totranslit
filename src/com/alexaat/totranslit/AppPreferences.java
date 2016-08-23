@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
@@ -28,6 +29,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -83,12 +85,14 @@ Button Button_Copy;
   		
   		
   		if(table_name == null){
-  		    ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, new ArrayList<String>());
+  		    ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.simple_list_item, new ArrayList<String>());
   	        Spinner_languages.setAdapter(adapter);
   			return;
   		}
+  	
   		
-  		 	table_name = table_name.replace("_to_", " >>> ");
+  		
+  		 	table_name = table_name.replace(MainActivity.TO_database, MainActivity.TO_dispaly);
   		
   		 
  	       // Get only language table in format Source_To_Result
@@ -101,12 +105,14 @@ Button Button_Copy;
  	        for(int i = 0; i<tableNames.size();i++){
  	        	
  	        	String s = tableNames.get(i);
- 	        	s = s.replace("_to_", " >>> ");
+ 	       
+ 	        	
+ 	        	s = s.replace(MainActivity.TO_database, MainActivity.TO_dispaly);
  	        	tableNames.set(i, s);
  	        	
  	        }
  	               
- 	        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, tableNames);
+ 	        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.simple_list_item, tableNames);
  	        
  	   	    Spinner_languages.setAdapter(adapter);
  	        
@@ -188,7 +194,8 @@ Button Button_Copy;
 				
 				String table_name;
 				table_name = Spinner_languages.getSelectedItem().toString();
-				table_name = table_name.replace(" >>> ", "_to_");
+
+				table_name = table_name.replace(MainActivity.TO_dispaly, MainActivity.TO_database);
 				
 				List<String> items = new ArrayList<String>();
 				Map<String,String> itemsMap = new TreeMap<String,String>();
@@ -202,12 +209,13 @@ Button Button_Copy;
 				for(Map.Entry<String,String> entry : itemsMap.entrySet()) {
 					String key = entry.getKey();
 					String value = entry.getValue();
-					items.add(key + " >>> " + value);
+					items.add(key + MainActivity.TO_dispaly + value);
 					
 				}
 				
+				
 				ArrayAdapter<String> adapter = new ArrayAdapter<String>(AppPreferences.this,
-						android.R.layout.simple_list_item_1,
+						R.layout.simple_list_item,
 						items);
 
 				
@@ -298,7 +306,7 @@ Button Button_Copy;
 					@Override
 					public void beforeTextChanged(CharSequence arg0, int arg1,
 							int arg2, int arg3) {
-						// TODO Auto-generated method stub
+						
 						
 					}
 
@@ -312,9 +320,9 @@ Button Button_Copy;
 					}});
 				
 				
+	
 				
-				
-				final String current_language = Spinner_languages.getSelectedItem().toString().replace(" >>> ", "_to_");
+				final String current_language = Spinner_languages.getSelectedItem().toString().replace(MainActivity.TO_dispaly, MainActivity.TO_database);
 				TextView_Language_Table.setText(Spinner_languages.getSelectedItem().toString());
 				///////////////////////////////////////////////////
 							
@@ -489,7 +497,7 @@ Button Button_Copy;
 								
 				// fill editText
 				String text_raw = ((TextView) view).getText().toString();
-				String[] text_raw_parts = text_raw.split(">");
+				String[] text_raw_parts = text_raw.split(MainActivity.TO_dispaly);
 				String text_key = text_raw_parts[0].trim();
 				String text_value = text_raw_parts[text_raw_parts.length-1].trim();
 				
@@ -524,8 +532,9 @@ Button Button_Copy;
 						}
 						else
 						{
-												
-						final String table_name = Spinner_languages.getSelectedItem().toString().replace(" >>> ", "_to_");
+
+							
+						final String table_name = Spinner_languages.getSelectedItem().toString().replace(MainActivity.TO_dispaly, MainActivity.TO_database);
 		
 						DatabaseHelper db = new DatabaseHelper(AppPreferences.this);
 						db.Insert(table_name, text_key, text_value);
@@ -547,15 +556,17 @@ Button Button_Copy;
 						
 						final String text_key = edit_layout_key_EditText.getText().toString().trim();
 						final String text_value = edit_layout_value_EditText.getText().toString().trim();
-						final String table_name = Spinner_languages.getSelectedItem().toString().replace(" >>> ", "_to_");			
+							
+						final String table_name = Spinner_languages.getSelectedItem().toString().replace(MainActivity.TO_dispaly, MainActivity.TO_database);			
 						
 						AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
 				 
 							// set title
 							alertDialogBuilder.setTitle("Delete . . .");
 				 
+					
 							// set dialog message
-							alertDialogBuilder.setMessage("Delete "+text_key+" >>> "+text_value+" ?")
+							alertDialogBuilder.setMessage("Delete "+text_key+MainActivity.TO_dispaly+text_value+" ?")
 								.setCancelable(false)
 								.setPositiveButton("Yes",new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog,int id) {
@@ -565,7 +576,8 @@ Button Button_Copy;
 																												
 										dialog_edit.dismiss();
 										
-										String text = text_key + " >>> "+text_value+ " deleted . . .";
+										
+										String text = text_key + MainActivity.TO_dispaly+text_value+ " deleted . . .";
 										Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
 										Set_Spinner(Spinner_languages.getSelectedItem().toString());
 										
@@ -605,11 +617,15 @@ Button Button_Copy;
 				
 				// custom dialog
 				final Dialog dialog = new Dialog(context);
+								
+				 
 				dialog.setContentView(R.layout.new_language_dialog);
 				dialog.getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 				
 				dialog.setTitle("Create new table");
-	 
+	 				
+				TextView TextView_dialog_Source = (TextView) dialog.findViewById(R.id.TextView_dialog_Source);
+				TextView_dialog_Source.setText(MainActivity.TO_dispaly);
 
 				Button dialogButton_Cancel = (Button) dialog.findViewById(R.id.Button_dialog_cancel);
 				// if Cancel button is clicked, close the custom dialog
@@ -634,16 +650,20 @@ Button Button_Copy;
 						final String source_text = EditText_dialog_Source.getText().toString();
 						final String target_text =  EditText_dialog_Target.getText().toString();
 						
-						if(source_text.contains("_to_") || target_text.contains("_to_"))
+						
+						
+						if(source_text.contains(MainActivity.TO_database) || target_text.contains(MainActivity.TO_database))
 						{
-							Toast.makeText(getApplicationContext(), "table cannot contain _To_ expression", Toast.LENGTH_SHORT).show();
+							
+							
+							Toast.makeText(getApplicationContext(), "table cannot contain " + MainActivity.TO_database + " expression", Toast.LENGTH_SHORT).show();
 						}
 						else
 						{
-						final String table_name = source_text+"_to_"+target_text;
-						final String table_name_mirror = target_text +"_to_"+ source_text;
+						final String table_name = source_text+MainActivity.TO_database+target_text;
+						final String table_name_mirror = target_text +MainActivity.TO_database+ source_text;
 						
-						String table_name_raw = source_text.trim() +" >>> "+target_text.trim();
+						String table_name_raw = source_text.trim() +MainActivity.TO_dispaly+target_text.trim();
 						
 						
 						if(!source_text.equals("") && !target_text.equals(""))
@@ -654,6 +674,8 @@ Button Button_Copy;
 							db.close();
 							dialog.dismiss();
 							Set_Spinner(table_name_raw);
+							
+							Toast.makeText(getApplicationContext(), "new table was created", Toast.LENGTH_SHORT).show();
 												
 						}
 						else
@@ -670,21 +692,24 @@ Button Button_Copy;
     	
     	Button_Delete.setOnClickListener(new OnClickListener(){
 
+    	
+    		
+    		
 			@Override
 			public void onClick(View arg0) {
-				final String table_name = Spinner_languages.getSelectedItem().toString().replace(" >>> ", "_to_");
+				final String table_name = Spinner_languages.getSelectedItem().toString().replace(MainActivity.TO_dispaly, MainActivity.TO_database);
 				
-				String[] language_parts = table_name.split("_to_");
+				String[] language_parts = table_name.split(MainActivity.TO_database);
 				String language_raw_parts_first = language_parts[0].trim();
 				String language_raw_parts_last = language_parts[language_parts.length-1].trim();
-				final String table_name_mirror = language_raw_parts_last+"_to_"+language_raw_parts_first;
+				final String table_name_mirror = language_raw_parts_last+MainActivity.TO_database+language_raw_parts_first;
 											
 				
 				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
      			// set title
 				alertDialogBuilder.setTitle("Delete . . .");
 				// set dialog message
-				alertDialogBuilder.setMessage("Delete "+table_name.replace("_to_", " >>> ")+" ?")
+				alertDialogBuilder.setMessage("Delete "+table_name.replace(MainActivity.TO_database, MainActivity.TO_dispaly)+" ?")
 					.setCancelable(false)
 					.setPositiveButton("Yes",new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog,int id) {
@@ -696,15 +721,16 @@ Button Button_Copy;
 								db.close();
 							
 							}
-							else{	
+							else{
+								
 							db.DeleteTable(table_name);
 							db.DeleteTable(table_name_mirror);
-							Set_Spinner(db.getListOfTables().size()>0 ? db.getListOfTables().get(0).replace("_to_", " >>> "):null);
+							Set_Spinner(db.getListOfTables().size()>0 ? db.getListOfTables().get(0).replace(MainActivity.TO_database, MainActivity.TO_dispaly):null);
 							db.close();
 							dialog.dismiss();
-							String text = table_name.replace("_to_", " >>> ")+ " deleted . . .";
+							String text = table_name.replace(MainActivity.TO_database, MainActivity.TO_dispaly)+ " deleted . . .";
 							Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
-							text = table_name_mirror.replace("_to_", " >>> ")+ " deleted . . .";
+							text = table_name_mirror.replace(MainActivity.TO_database, MainActivity.TO_dispaly)+ " deleted . . .";
 							Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
 							}
 																					
@@ -775,13 +801,19 @@ Button Button_Copy;
 				
 				// custom dialog
 				final Dialog dialog_copy = new Dialog(context);
+				
+							
 				dialog_copy.setContentView(R.layout.copy_layout);
 				dialog_copy.getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-				dialog_copy.setTitle("Copy Table                                                                              ");
+				dialog_copy.setTitle("Copy Table");
 							
+				
+								
 				final Spinner Spinner_copy_layout = (Spinner) dialog_copy.findViewById(R.id.Spinner_copy_layout);
 				final EditText EditText_copy_layout_source_language = (EditText) dialog_copy.findViewById(R.id.EditText_copy_layout_source_language);
 				final EditText EditText_copy_layout_target_language = (EditText) dialog_copy.findViewById(R.id.EditText_copy_layout_target_language);
+				TextView TextView_copy_layout_To = (TextView) dialog_copy.findViewById(R.id.TextView_copy_layout_To);
+				TextView_copy_layout_To.setText(MainActivity.TO_dispaly);
 				Button Button_copy_layout_Ok = (Button) dialog_copy.findViewById(R.id.Button_copy_layout_Ok);
 				Button Button_copy_layout_Cancel = (Button) dialog_copy.findViewById(R.id.Button_copy_layout_Cancel);
 							
@@ -801,14 +833,18 @@ Button Button_Copy;
 		        // Display in format Source > > > Result
 		        for(int i = 0; i<Table_Names_New.size();i++){
 		        	
-		        	String Table_Name_Parts[] = Table_Names_New.get(i).split("_to_");
-		        	String Table_Name_To_Display = Table_Name_Parts[0]+" >>> "+ Table_Name_Parts[Table_Name_Parts.length-1];
+		        	
+		        	String Table_Name_Parts[] = Table_Names_New.get(i).split(MainActivity.TO_database);
+		        	String Table_Name_To_Display = Table_Name_Parts[0]+MainActivity.TO_dispaly+ Table_Name_Parts[Table_Name_Parts.length-1];
 		        	languages_array.add(Table_Name_To_Display);
 		        	
 		        }
 		         
 		    
-		        Spinner_copy_layout.setAdapter(new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, languages_array));
+
+			   
+		        
+		        Spinner_copy_layout.setAdapter(new ArrayAdapter<String>(context, R.layout.simple_list_item, languages_array));
 				/// End of set spinner
 		        	
        
@@ -821,21 +857,23 @@ Button Button_Copy;
 						String _copy_layout_source_language = EditText_copy_layout_source_language.getText().toString().trim();
 						String _copy_layout_target_language = EditText_copy_layout_target_language.getText().toString().trim();
 						
-						
-						if(_copy_layout_source_language.contains("_to_") || _copy_layout_target_language.contains("_To_"))
+							
+						if(_copy_layout_source_language.toLowerCase().contains(MainActivity.TO_database))
 						{
 						
-							Toast.makeText(getApplicationContext(), "table name cannot contain _to_", Toast.LENGTH_SHORT).show();
+							Toast.makeText(getApplicationContext(), "table name cannot contain " + MainActivity.TO_database, Toast.LENGTH_SHORT).show();
 							
 												
 						}
 						else
 						{
+						
+						
 							
-						    String table_name_copy = _copy_layout_source_language+"_to_"+ _copy_layout_target_language;
-							String new_table_name =  table_name_copy.replace("_to_", " >>> ");
+						    String table_name_copy = _copy_layout_source_language+MainActivity.TO_database+ _copy_layout_target_language;
+							String new_table_name =  table_name_copy.replace(MainActivity.TO_database, MainActivity.TO_dispaly);
 							String table_name_raw = Spinner_copy_layout.getSelectedItem().toString();
-							String spinner_language = table_name_raw.replace(" >>> ", "_to_");
+							String spinner_language = table_name_raw.replace(MainActivity.TO_dispaly, MainActivity.TO_database);
 														
 							String sql = "INSERT INTO [" + table_name_copy +"] SELECT * FROM [" + spinner_language+"]";
 							
@@ -854,11 +892,12 @@ Button Button_Copy;
 											
 							
 							
-							 String table_name_copy_copy =  _copy_layout_target_language +"_to_" + _copy_layout_source_language;
+							
+							 String table_name_copy_copy =  _copy_layout_target_language +MainActivity.TO_database + _copy_layout_source_language;
 							 String spinner_language_copy = "";
-							 String[] spinner_language_parts =  spinner_language.split("_to_");
+							 String[] spinner_language_parts =  spinner_language.split(MainActivity.TO_database);
 							 spinner_language_copy = spinner_language_parts[spinner_language_parts.length-1]
-									 				+ "_to_"
+									 				+ MainActivity.TO_database
 									 				+spinner_language_parts[0];
 										 
 							 sql = "INSERT INTO [" + table_name_copy_copy +"] SELECT * FROM [" + spinner_language_copy+"]";
@@ -867,7 +906,7 @@ Button Button_Copy;
 						 		 db.CreateTable(table_name_copy_copy);
 						 		 db.getWritableDatabase().execSQL(sql);
 						 		 Toast.makeText(getApplicationContext(), "table is copied . . . ", Toast.LENGTH_SHORT).show();
-							     Set_Spinner(table_name_copy_copy.replace("_to_", " >>> "));
+							     Set_Spinner(table_name_copy_copy.replace(MainActivity.TO_database, MainActivity.TO_dispaly));
 							 }else{
 								 Toast.makeText(getApplicationContext(), "table "+ table_name_copy_copy+ " exists . . . ", Toast.LENGTH_SHORT).show();	
 							 }
@@ -900,13 +939,13 @@ Button Button_Copy;
 			}});
     	
     }
-
+    
     private void SwapInsert(String language, String key, String value){
     	
-    	String[] language_parts = language.split("_to_");
+    	String[] language_parts = language.split( MainActivity.TO_database);
     	String part1 = language_parts[0];
     	String part2 = language_parts[language_parts.length-1];
-    	String new_language = part2+"_to_"+part1;
+    	String new_language = part2+ MainActivity.TO_database+part1;
     	
     	DatabaseHelper db = new DatabaseHelper(this);
     	if(db.TableExists(new_language)){

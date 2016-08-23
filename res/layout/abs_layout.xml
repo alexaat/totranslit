@@ -9,8 +9,10 @@
         android:layout_height="match_parent"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:gravity="center"
         android:textColor="#000000"
+        android:gravity="center"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        
        
         android:background="@drawable/lable_bg"/>
        
@@ -30,9 +32,10 @@
          android:layout_height="match_parent"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:gravity="center"
         android:textColor="#000000"
-        android:background="@drawable/lable_bg"/>
+        android:background="@drawable/lable_bg"
+        android:gravity="center"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <ImageButton
                 android:id="@+id/imageButtonMenu"
