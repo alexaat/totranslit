@@ -12,6 +12,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.Toast;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -25,13 +26,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             RUSSIAN_TO_ENGLISH + "( " + COLUMN_KEY + " text, " +
  		   COLUMN_VALUE
             + " text);";
+    Context ctx;
     
     private static final String CREATE_ENGLISH_TO_RUSSIAN = "create table " + 
             ENGLISH_TO_RUSSIAN + "( " + COLUMN_KEY + " text, " +
             COLUMN_VALUE + " text);";
 	
 	 public DatabaseHelper(Context context) {
-       super(context, DATABASE_NAME, null, DATABASE_VERSION);
+	   super(context, DATABASE_NAME, null, DATABASE_VERSION);
+       ctx = context;
 }
 
  	@Override
@@ -147,18 +150,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		 this.getWritableDatabase().delete(table, "key=?", new String[]{key});
 	 }
 	 
-	 public void CreateTable(String table_name){
+	 public boolean CreateTable(String table_name){
 	
 		String sql = "create table if not exists " + 
 					  table_name + "( " + COLUMN_KEY + " text, " +
 					  COLUMN_VALUE + " text);";
 		 
-		 this.getWritableDatabase().execSQL(sql);	 
-		 
+		try{
+		 this.getWritableDatabase().execSQL(sql);
+		 return true;
+		}
+		catch(Exception e){
+			Toast.makeText(ctx, "Couldn't create table", Toast.LENGTH_SHORT).show();
+			return false;
+		}
 		 
 	 }
 
 	 public void DeleteTable(String table_name){
+		
 		 
 		 this.getWritableDatabase().execSQL("DROP TABLE IF EXISTS " + table_name);
 	 }

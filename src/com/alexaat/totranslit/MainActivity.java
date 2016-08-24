@@ -76,8 +76,7 @@ public class MainActivity extends  ActionBarActivity {
         
         EditText_Source = (EditText) findViewById(R.id.EditText_dialog_Source);
         EditText_Result = (EditText) findViewById(R.id.EditText_Result);
-        
-        
+                     
         SetInitialTables();
       
             

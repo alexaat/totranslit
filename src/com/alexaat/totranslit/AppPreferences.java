@@ -654,11 +654,17 @@ Button Button_Copy;
 						
 						if(source_text.contains(MainActivity.TO_database) || target_text.contains(MainActivity.TO_database))
 						{
-							
-							
+													
 							Toast.makeText(getApplicationContext(), "table cannot contain " + MainActivity.TO_database + " expression", Toast.LENGTH_SHORT).show();
 						}
-						else
+						else if(source_text.contains("\"") || target_text.contains("\"")||
+								source_text.contains("\'") || target_text.contains("\'")){
+							
+							Toast.makeText(getApplicationContext(), "table cannot contain \" or \'", Toast.LENGTH_SHORT).show();
+							
+						}else if(source_text.contains(" ") || target_text.contains(" ")){
+							Toast.makeText(getApplicationContext(), "table name should be one word", Toast.LENGTH_SHORT).show();
+						}else
 						{
 						final String table_name = source_text+MainActivity.TO_database+target_text;
 						final String table_name_mirror = target_text +MainActivity.TO_database+ source_text;
@@ -669,13 +675,29 @@ Button Button_Copy;
 						if(!source_text.equals("") && !target_text.equals(""))
 						{		
 							DatabaseHelper db = new DatabaseHelper(AppPreferences.this);
-							db.CreateTable(table_name);
-							db.CreateTable(table_name_mirror);
-							db.close();
-							dialog.dismiss();
-							Set_Spinner(table_name_raw);
 							
-							Toast.makeText(getApplicationContext(), "new table was created", Toast.LENGTH_SHORT).show();
+							boolean created = db.CreateTable(table_name);
+						    if(created){
+						    	created = db.CreateTable(table_name_mirror);
+						    	if(!created){
+						    		Toast.makeText(getApplicationContext(), "table name is invalid . . .", Toast.LENGTH_SHORT).show();
+						    		db.DeleteTable(table_name);
+						    	}
+						    	else{
+						    		Toast.makeText(getApplicationContext(), "new table was created", Toast.LENGTH_SHORT).show();
+						    		db.close();
+									dialog.dismiss();
+									Set_Spinner(table_name_raw);
+						    	}
+						    }else{
+						    	Toast.makeText(getApplicationContext(), "table name is invalid . . .", Toast.LENGTH_SHORT).show();
+						    }
+							
+							db.close();
+							//dialog.dismiss();
+							//Set_Spinner(table_name_raw);
+							
+							
 												
 						}
 						else
@@ -854,18 +876,100 @@ Button Button_Copy;
 					@Override
 					public void onClick(View arg0) {
 						
+						boolean tables_created = false;
+										
+						
+						final String source_text = EditText_copy_layout_source_language.getText().toString();
+						final String target_text =  EditText_copy_layout_target_language.getText().toString();
+												
+						if(source_text.contains(MainActivity.TO_database) || target_text.contains(MainActivity.TO_database))
+						{
+													
+							Toast.makeText(getApplicationContext(), "table cannot contain " + MainActivity.TO_database + " expression", Toast.LENGTH_SHORT).show();
+						}
+						else if(source_text.contains("\"") || target_text.contains("\"")||
+								source_text.contains("\'") || target_text.contains("\'")){
+							
+							Toast.makeText(getApplicationContext(), "table cannot contain \" or \'", Toast.LENGTH_SHORT).show();
+							
+						}else if(source_text.contains(" ") || target_text.contains(" ")){
+							Toast.makeText(getApplicationContext(), "table name should be one word", Toast.LENGTH_SHORT).show();
+						}else
+						{
+						final String table_name = source_text+MainActivity.TO_database+target_text;
+						final String table_name_mirror = target_text +MainActivity.TO_database+ source_text;
+						
+						String table_name_raw = source_text.trim() +MainActivity.TO_dispaly+target_text.trim();
+						
+						
+						if(!source_text.equals("") && !target_text.equals(""))
+						{		
+							DatabaseHelper db = new DatabaseHelper(AppPreferences.this);
+							
+							boolean created = db.CreateTable(table_name);
+						    if(created){
+						    	created = db.CreateTable(table_name_mirror);
+						    	if(!created){
+						    		Toast.makeText(getApplicationContext(), "table name is invalid . . .", Toast.LENGTH_SHORT).show();
+						    		db.DeleteTable(table_name);
+						    	}
+						    	else{
+						    		tables_created = true;
+						    								    	}
+						    }else{
+						    	Toast.makeText(getApplicationContext(), "table name is invalid . . .", Toast.LENGTH_SHORT).show();
+						    }
+							
+							db.close();
+											
+						}
+						else
+						{
+							Toast.makeText(getApplicationContext(), "table name is invalid . . .", Toast.LENGTH_SHORT).show();
+						}
+						}							
+						
+						// Insert
+						if(tables_created){
+							final String table_name = source_text+MainActivity.TO_database+target_text;
+							final String table_name_mirror = target_text +MainActivity.TO_database+ source_text;
+							String spinner_language = Spinner_copy_layout.getSelectedItem().toString().replace(MainActivity.TO_dispaly, MainActivity.TO_database);
+							String[] parts = spinner_language.split( MainActivity.TO_database);
+							String spinner_language_copy = parts[parts.length-1]+ MainActivity.TO_database+parts[0];
+							DatabaseHelper db = new DatabaseHelper(AppPreferences.this);
+							String sql = "INSERT INTO [" + table_name +"] SELECT * FROM [" + spinner_language+"]";
+							db.getWritableDatabase().execSQL(sql);
+							sql = "INSERT INTO [" + table_name_mirror +"] SELECT * FROM [" + spinner_language_copy+"]";
+							db.getWritableDatabase().execSQL(sql);
+							db.close();
+							Toast.makeText(getApplicationContext(), "table is copied . . . ", Toast.LENGTH_SHORT).show();
+						    Set_Spinner(table_name.replace(MainActivity.TO_database,MainActivity.TO_dispaly));
+							dialog_copy.dismiss();
+						}
+								
+						
+					
+						
+						
+						/*
+						
 						String _copy_layout_source_language = EditText_copy_layout_source_language.getText().toString().trim();
 						String _copy_layout_target_language = EditText_copy_layout_target_language.getText().toString().trim();
 						
 							
-						if(_copy_layout_source_language.toLowerCase().contains(MainActivity.TO_database))
-						{
+						if(_copy_layout_source_language.toLowerCase().contains(MainActivity.TO_database)||
+						   _copy_layout_target_language.toLowerCase().contains(MainActivity.TO_database)){
 						
 							Toast.makeText(getApplicationContext(), "table name cannot contain " + MainActivity.TO_database, Toast.LENGTH_SHORT).show();
-							
-												
+																			
+						}else if(_copy_layout_source_language.contains("\"") || _copy_layout_target_language.contains("\"")||
+								_copy_layout_source_language.contains("\'") || _copy_layout_target_language.contains("\'")){
+								
+								Toast.makeText(getApplicationContext(), "table cannot contain \" or \'", Toast.LENGTH_SHORT).show();
 						}
-						else
+						else if(_copy_layout_source_language.contains(" ") || _copy_layout_target_language.contains(" ")){
+							Toast.makeText(getApplicationContext(), "table name should be one word", Toast.LENGTH_SHORT).show();
+						}else
 						{
 						
 						
@@ -880,11 +984,12 @@ Button Button_Copy;
 							DatabaseHelper db = new DatabaseHelper(AppPreferences.this);
 						
 							if(!db.TableExists(table_name_copy)){
-								db.CreateTable(table_name_copy);
-								db.getWritableDatabase().execSQL(sql);
+								boolean created = db.CreateTable(table_name_copy);
+								if(created){
+								 db.getWritableDatabase().execSQL(sql);
 								 Toast.makeText(getApplicationContext(), "table is copied . . . ", Toast.LENGTH_SHORT).show();
 							     Set_Spinner(new_table_name);
-																
+								}					
 							}
 							else{
 								Toast.makeText(getApplicationContext(), "table "+ table_name_copy+ " exists . . . ", Toast.LENGTH_SHORT).show();	
@@ -903,10 +1008,13 @@ Button Button_Copy;
 							 sql = "INSERT INTO [" + table_name_copy_copy +"] SELECT * FROM [" + spinner_language_copy+"]";
 							
 							 if(!db.TableExists(table_name_copy_copy)){
-						 		 db.CreateTable(table_name_copy_copy);
-						 		 db.getWritableDatabase().execSQL(sql);
-						 		 Toast.makeText(getApplicationContext(), "table is copied . . . ", Toast.LENGTH_SHORT).show();
-							     Set_Spinner(table_name_copy_copy.replace(MainActivity.TO_database, MainActivity.TO_dispaly));
+								 
+								 boolean created = db.CreateTable(table_name_copy_copy);
+								 if(created){
+						 		  db.getWritableDatabase().execSQL(sql);
+						 		  Toast.makeText(getApplicationContext(), "table is copied . . . ", Toast.LENGTH_SHORT).show();
+							      Set_Spinner(table_name_copy_copy.replace(MainActivity.TO_database, MainActivity.TO_dispaly));
+								 }
 							 }else{
 								 Toast.makeText(getApplicationContext(), "table "+ table_name_copy_copy+ " exists . . . ", Toast.LENGTH_SHORT).show();	
 							 }
@@ -914,10 +1022,10 @@ Button Button_Copy;
 							
 							dialog_copy.dismiss();
 							db.close();	
-							
+											
 						}
 						
-						
+						*/
 						
 					}});
 		        
